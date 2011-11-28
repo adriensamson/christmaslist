@@ -59,3 +59,27 @@
     git=http://github.com/symfony/AsseticBundle.git
     target=/bundles/Symfony/Bundle/AsseticBundle
     version=v1.0.1
+
+# custom    
+[doctrine-mongodb]
+    git=http://github.com/doctrine/mongodb.git
+
+[doctrine-mongodb-odm]
+    git=http://github.com/doctrine/mongodb-odm.git
+
+[DoctrineMongoDBBundle]
+    git=http://github.com/symfony/DoctrineMongoDBBundle.git
+    version=origin/2.0
+    target=/bundles/Symfony/Bundle/DoctrineMongoDBBundle
+
+[FOSUserBundle]
+    git=git://github.com/FriendsOfSymfony/FOSUserBundle.git
+    target=bundles/FOS/UserBundle
+
+[doctrine-fixtures]
+    git=http://github.com/doctrine/data-fixtures.git
+
+[DoctrineFixturesBundle]
+    git=http://github.com/symfony/DoctrineFixturesBundle.git
+    target=/bundles/Symfony/Bundle/DoctrineFixturesBundle
+

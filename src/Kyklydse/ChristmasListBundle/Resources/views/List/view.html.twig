@@ -1,0 +1,28 @@
+{% set is_mine = list.owner == current_user %}
+{% if is_mine %}
+<h1>My Christmas List</h1>
+{% else %}
+<h1>Christmas List of {{ list.owner.name }}</h1>
+{% endif %}
+
+<dl>
+{% for item in list.items %}
+    {% if not is_mine or item.proposer == current_user %}
+    <dt>{{ item.title }} (proposed by {{ item.proposer }})</dt>
+    <dd>
+        <p>{{ item.description }}</p>
+        {% if not is_mine %}
+        <ul>
+        {% for comment in item.comments %}
+            <li><strong>{{ comment.author }}</strong> : {{ comment.content }}</li>
+        {% endfor %}
+            <li><a href="{{ path('kyklydse_christmaslist_list_commentitem', {'list_id': list.id, 'item_id': item.id})}}">New comment</a></li>
+        </ul>
+        {% endif %}
+    </dd>
+    {% endif %}
+{% endfor %}
+    <dt><a href="{{ path('kyklydse_christmaslist_list_newitem', {'list_id': list.id}) }}">New</a></dt>
+</dl>
+
+<p><a href="{{ path('kyklydse_christmaslist_list_index') }}">Back</a></p>

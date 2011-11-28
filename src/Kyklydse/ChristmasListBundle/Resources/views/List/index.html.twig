@@ -1,0 +1,12 @@
+<h1>Christmas Lists</h1>
+
+<ul>
+{% for list in lists %}
+    {% if list.owner == current_user %}
+    <li><a href="{{ path('kyklydse_christmaslist_list_view' , {'id':list.id}) }}">{{ list.name }} (mine)</a></li>    
+    {% else %}
+    <li><a href="{{ path('kyklydse_christmaslist_list_view' , {'id':list.id}) }}">{{ list.name }} ({{ list.owner.name }})</a></li>
+    {% endif %}
+{% endfor %}
+    <li><a href="{{ path('kyklydse_christmaslist_list_create') }}">New</a></li>
+</ul>

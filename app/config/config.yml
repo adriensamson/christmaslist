@@ -58,3 +58,20 @@ swiftmailer:
 jms_security_extra:
     secure_controllers:  true
     secure_all_services: false
+
+doctrine_mongodb:
+    connections:
+        default:
+            server: mongodb://localhost:27017
+            options:
+                connect: true
+    default_database: christmaslist
+    document_managers:
+        default:
+            auto_mapping: true
+
+fos_user:
+    db_driver: mongodb # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: Kyklydse\ChristmasListBundle\Document\User
+
