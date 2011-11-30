@@ -1,28 +1,34 @@
+{% extends 'KyklydseChristmasListBundle::layout.html.twig' %}
+
+{% block content %}
 {% set is_mine = list.owner == current_user %}
-{% if is_mine %}
-<h1>My Christmas List</h1>
-{% else %}
-<h1>Christmas List of {{ list.owner.name }}</h1>
-{% endif %}
+
+<h1>{% trans with {'%name%': list.owner.name}%}Christmas list of %name%{% endtrans %}</h1>
 
 <dl>
 {% for item in list.items %}
     {% if not is_mine or item.proposer == current_user %}
-    <dt>{{ item.title }} (proposed by {{ item.proposer }})</dt>
-    <dd>
-        <p>{{ item.description }}</p>
+    <dt class="list-item-title"><strong class="title">{{ item.title }}</strong> <span class="proposer">{% trans with {'%name%': item.proposer} %}proposed by %name%{% endtrans %}</span></dt>
+    <dd class="list-item-info">
+        <p class="description">{{ item.description }}</p>
+        {% if item.url %}<a href="{{ item.url }}" class="more-info">{% trans %}More info{% endtrans %}</a>{% endif %}
         {% if not is_mine %}
-        <ul>
+        <ul class="comments">
         {% for comment in item.comments %}
-            <li><strong>{{ comment.author }}</strong> : {{ comment.content }}</li>
+            <li>
+                <span class="author">{{ comment.author }}</span>
+                {{ comment.content }}
+            </li>
         {% endfor %}
-            <li><a href="{{ path('kyklydse_christmaslist_list_commentitem', {'list_id': list.id, 'item_id': item.id})}}">New comment</a></li>
+            <li><a href="{{ path('kyklydse_christmaslist_list_commentitem', {'list_id': list.id, 'item_id': item.id})}}">{% trans %}New comment{% endtrans %}</a></li>
         </ul>
         {% endif %}
     </dd>
     {% endif %}
 {% endfor %}
-    <dt><a href="{{ path('kyklydse_christmaslist_list_newitem', {'list_id': list.id}) }}">New</a></dt>
+    <dt><a href="{{ path('kyklydse_christmaslist_list_newitem', {'list_id': list.id}) }}">{% trans %}New item{% endtrans %}</a></dt>
 </dl>
 
-<p><a href="{{ path('kyklydse_christmaslist_list_index') }}">Back</a></p>
+<p><a href="{{ path('kyklydse_christmaslist_list_index') }}">{% trans %}Back to lists{% endtrans %}</a></p>
+
+{% endblock %}

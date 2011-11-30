@@ -12,7 +12,7 @@ class ItemType extends AbstractType
         $builder
             ->add('title')
             ->add('description', 'textarea')
-            ->add('url', 'url')
+            ->add('url', 'url', array('required' => false))
         ;
     }
     

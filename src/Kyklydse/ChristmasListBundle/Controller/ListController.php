@@ -16,7 +16,7 @@ use Kyklydse\ChristmasListBundle\Document\Comment;
 class ListController extends Controller
 {
     /**
-     * @Route("/lists")
+     * @Route("/")
      * @Template()
      */
     public function indexAction()
@@ -53,6 +53,7 @@ class ListController extends Controller
     {
         $list = new ChristmasList();
         $list->setOwner($this->get('security.context')->getToken()->getUser());
+        $list->setName($this->get('translator')->trans('Christmas %year%', array('%year%' => date('Y'))));
         $form = $this->createForm(new ListType(), $list);
         
         if ($request->getMethod() === 'POST') {
