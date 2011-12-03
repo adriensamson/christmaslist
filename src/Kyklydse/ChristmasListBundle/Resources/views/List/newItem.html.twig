@@ -1,9 +1,13 @@
-<h1>New Christmas List Item</h1>
+{% extends 'KyklydseChristmasListBundle::layout.html.twig' %}
+
+{% block content %}
 
 <form action="{{ path('kyklydse_christmaslist_list_newitem', {'list_id': list.id}) }}" method="post" {{ form_enctype(form) }}>
     {{ form_errors(form) }}
 
     {{ form_rest(form) }}
 
-    <input type="submit" />
+    <button type="submit">{% trans %}Validate{% endtrans %}</button>
 </form>
+
+{% endblock %}

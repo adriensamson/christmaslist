@@ -9,7 +9,7 @@ class ListType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name');
+        $builder->add('name', 'text', array('label' => 'List name'));
     }
     
     public function getName()
