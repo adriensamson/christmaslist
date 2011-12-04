@@ -8,16 +8,19 @@
 <dl>
 {% for item in list.items %}
     {% if not is_mine or item.proposer == current_user %}
-    <dt class="list-item-title"><strong class="title">{{ item.title }}</strong> <span class="proposer">{% trans with {'%name%': item.proposer} %}proposed by %name%{% endtrans %}</span></dt>
+    <dt class="list-item-title">
+        <strong class="title">{{ item.title }}</strong> <span class="proposer">{% trans with {'%name%': item.proposer} %}proposed by %name%{% endtrans %}</span>
+        {% if item.proposer == current_user %}<a href="{{ path('kyklydse_christmaslist_list_edititem', {'list_id': list.id, 'item_id': item.id}) }}">{% trans %}Modify{% endtrans %}</a>{% endif %}
+    </dt>
     <dd class="list-item-info">
-        <p class="description">{{ item.description }}</p>
         {% if item.url %}<a href="{{ item.url }}" class="more-info">{% trans %}More info{% endtrans %}</a>{% endif %}
+        <p class="description">{{ item.description }}</p>
         {% if not is_mine %}
         <ul class="comments">
         {% for comment in item.comments %}
             <li>
                 <span class="author">{{ comment.author }}</span>
-                {{ comment.content }}
+                <span class="comment-content">{{ comment.content }}</span>
             </li>
         {% endfor %}
             <li><a href="{{ path('kyklydse_christmaslist_list_commentitem', {'list_id': list.id, 'item_id': item.id})}}">{% trans %}New comment{% endtrans %}</a></li>

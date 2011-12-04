@@ -2,6 +2,8 @@
 
 namespace Kyklydse\ChristmasListBundle\Controller;
 
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -101,6 +103,43 @@ class ListController extends Controller
         }
         
         return array('form' => $form->createView(), 'list' => $list);
+    }
+    
+    /**
+    * @Route("/list/item/edit/{list_id}/{item_id}")
+    * @Template()
+    */
+    public function editItemAction($list_id, $item_id, Request $request)
+    {
+        $list = $this->get('doctrine.odm.mongodb.document_manager')
+            ->getRepository('KyklydseChristmasListBundle:ChristmasList')
+            ->find($list_id);
+        $items = $list->getItems()->filter(function ($e) use ($item_id) {
+            return $e->getId() == $item_id;
+        });
+        $item = $items->first();
+    
+        if (!$item) {
+            throw $this->createNotFoundException('No item found for id '.$item_id);
+        }
+        if ($item->getProposer() != $this->get('security.context')->getToken()->getUser()) {
+            throw new AccessDeniedHttpException();
+        }
+    
+        $form = $this->createForm(new ItemType(), $item);
+    
+        if ($request->getMethod() === 'POST') {
+            $form->bindRequest($request);
+    
+            if ($form->isValid()) {
+                $dm = $this->get('doctrine.odm.mongodb.document_manager');
+                $dm->flush();
+    
+                return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_view', array('id' => $list->getId())));
+            }
+        }
+    
+        return array('form' => $form->createView(), 'list' => $list, 'item' => $item);
     }
     
     /**

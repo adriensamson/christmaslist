@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<form action="{{ path('kyklydse_christmaslist_list_newitem', {'list_id': list.id}) }}" method="post" {{ form_enctype(form) }}>
+<form action="{{ path('kyklydse_christmaslist_list_edititem', {'list_id': list.id, 'item_id': item.id}) }}" method="post" {{ form_enctype(form) }}>
     {{ form_errors(form) }}
 
     {{ form_rest(form) }}
@@ -10,4 +10,5 @@
     <button type="submit">{% trans %}Validate{% endtrans %}</button>
 </form>
 <a href="{{ path('kyklydse_christmaslist_list_view', {'id': list.id}) }}">{{ 'Back to list' | trans }}</a>
+
 {% endblock %}
