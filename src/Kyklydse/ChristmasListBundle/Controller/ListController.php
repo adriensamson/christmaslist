@@ -59,7 +59,7 @@ class ListController extends Controller
         $form = $this->createForm(new ListType(), $list);
         
         if ($request->getMethod() === 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
             
             if ($form->isValid()) {
                 $dm = $this->get('doctrine.odm.mongodb.document_manager');
@@ -91,7 +91,7 @@ class ListController extends Controller
         $form = $this->createForm(new ItemType(), $item);
         
         if ($request->getMethod() === 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
         
             if ($form->isValid()) {
                 $list->addItem($item);
@@ -129,7 +129,7 @@ class ListController extends Controller
         $form = $this->createForm(new ItemType(), $item);
     
         if ($request->getMethod() === 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
     
             if ($form->isValid()) {
                 $dm = $this->get('doctrine.odm.mongodb.document_manager');
@@ -163,7 +163,7 @@ class ListController extends Controller
         $form = $this->createForm(new CommentType(), $comment);
         
         if ($request->getMethod() === 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
         
             if ($form->isValid()) {
                 $item->addComment($comment);
