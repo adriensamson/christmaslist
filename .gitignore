@@ -1,2 +1,9 @@
 vendor
 web/bundles
+app/cache
+app/logs
+.buildpath
+.project
+.settings
+composer.phar
+
