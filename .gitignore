@@ -2,6 +2,7 @@ vendor
 web/bundles
 app/cache
 app/logs
+bin
 .buildpath
 .project
 .settings
