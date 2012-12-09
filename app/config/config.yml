@@ -71,4 +71,7 @@ fos_user:
     db_driver: mongodb # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: Kyklydse\ChristmasListBundle\Document\User
+    from_email:
+        address: postmaster@kyklydse.com
+        sender_name: Christmas Lists
 
