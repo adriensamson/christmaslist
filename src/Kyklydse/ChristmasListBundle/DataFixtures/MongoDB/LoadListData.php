@@ -6,10 +6,11 @@ use Kyklydse\ChristmasListBundle\Document\ChristmasList;
 use Kyklydse\ChristmasListBundle\Document\Item;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadListData extends AbstractFixture implements OrderedFixtureInterface
 {
-    public function load($manager)
+    public function load(ObjectManager $manager)
     {
         $list = new ChristmasList();
         $list->setName('Test');

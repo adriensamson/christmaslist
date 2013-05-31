@@ -5,6 +5,7 @@ namespace Kyklydse\ChristmasListBundle\DataFixtures\MongoDB;
 use Kyklydse\ChristmasListBundle\Document\User;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -17,7 +18,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         $this->container = $container;
     }
     
-    public function load($manager)
+    public function load(ObjectManager $manager)
     {
         $fosUserManager = $this->container->get('fos_user.user_manager');
         
