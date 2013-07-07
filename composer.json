@@ -1,6 +1,7 @@
 {
     "name": "kyklydse/christmaslist",
     "description": "Christmas Lists",
+    "license": "MIT",
     "autoload": {
         "psr-0": { "": "src/" }
     },
