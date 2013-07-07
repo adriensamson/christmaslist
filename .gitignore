@@ -1,11 +1,8 @@
 app/config/parameters.yml
+app/check.php
+app/SymfonyRequirements.php
 vendor
 web/bundles
 app/cache
 app/logs
-bin
-.buildpath
-.project
-.settings
-composer.phar
 
