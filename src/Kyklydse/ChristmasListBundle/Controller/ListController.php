@@ -2,12 +2,11 @@
 
 namespace Kyklydse\ChristmasListBundle\Controller;
 
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedException;
 use Kyklydse\ChristmasListBundle\Form\ListType;
 use Kyklydse\ChristmasListBundle\Form\ItemType;
 use Kyklydse\ChristmasListBundle\Form\CommentType;
@@ -123,7 +122,7 @@ class ListController extends Controller
             throw $this->createNotFoundException('No item found for id '.$item_id);
         }
         if ($item->getProposer() != $this->get('security.context')->getToken()->getUser()) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
     
         $form = $this->createForm(new ItemType(), $item);
