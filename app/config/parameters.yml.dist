@@ -1,4 +1,4 @@
 parameters:
     mailer_transport: sendmail
     locale: fr
-    secret: ThisTokenIsNotSoSecretChangeIt
+    secret: dXSLpdo3706OmJEWU3w68Gd+rDpKEv52
