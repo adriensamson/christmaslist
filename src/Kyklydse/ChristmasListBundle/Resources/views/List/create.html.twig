@@ -1,5 +1,19 @@
 {% extends 'KyklydseChristmasListBundle::layout.html.twig' %}
 
+{% form_theme form _self %}
+
+{% block choice_widget_expanded %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+    {% for child in form %}
+        {{ form_widget(child) }}
+        {{ form_label(child) }}
+        <br/>
+    {% endfor %}
+    </div>
+{% endspaceless %}
+{% endblock choice_widget_expanded %}
+
 {% block content %}
 
 <form action="{{ path('kyklydse_christmaslist_list_create') }}" method="post" {{ form_enctype(form) }}>
