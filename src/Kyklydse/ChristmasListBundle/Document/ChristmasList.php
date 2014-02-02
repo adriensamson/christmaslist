@@ -20,17 +20,19 @@ class ChristmasList
     protected $name;
     
     /**
-     * @MongoDB\ReferenceOne(targetDocument="User")
+     * @MongoDB\ReferenceMany(targetDocument="User")
      */
-    protected $owner;
+    protected $owners;
     
     /**
      * @MongoDB\EmbedMany(targetDocument="Item")
      */
     protected $items;
+
     public function __construct()
     {
         $this->items = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->owners = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -46,29 +48,34 @@ class ChristmasList
     /**
      * Set owner
      *
-     * @param Kyklydse\ChristmasListBundle\Document\User $owner
+     * @param User $owner
      */
-    public function setOwner(\Kyklydse\ChristmasListBundle\Document\User $owner)
+    public function addOwner(User $owner)
     {
-        $this->owner = $owner;
+        $this->owners[] = $owner;
     }
 
     /**
      * Get owner
      *
-     * @return Kyklydse\ChristmasListBundle\Document\User $owner
+     * @return \Doctrine\Common\Collections\Collection $owner
      */
-    public function getOwner()
+    public function getOwners()
     {
-        return $this->owner;
+        return $this->owners;
+    }
+
+    public function isOwner(User $user)
+    {
+        return $this->owners->contains($user);
     }
 
     /**
      * Add item
      *
-     * @param Kyklydse\ChristmasListBundle\Document\Item $item
+     * @param Item $item
      */
-    public function addItem(\Kyklydse\ChristmasListBundle\Document\Item $item)
+    public function addItem(Item $item)
     {
         $this->items[] = $item;
     }
@@ -76,7 +83,7 @@ class ChristmasList
     /**
      * Get items
      *
-     * @return Doctrine\Common\Collections\Collection $items
+     * @return \Doctrine\Common\Collections\Collection $items
      */
     public function getItems()
     {

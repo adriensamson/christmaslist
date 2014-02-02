@@ -1,13 +1,18 @@
 {% extends 'KyklydseChristmasListBundle::layout.html.twig' %}
 
 {% block content %}
-{% set is_mine = list.owner == current_user %}
 
-<h1>{% trans with {'%name%': list.owner.name}%}Christmas list of %name%{% endtrans %}</h1>
+{% set owner_names %}
+    {% for owner in list.owners %}
+        {{ owner.name }}
+        {% if not loop.last %},{% endif %}
+    {% endfor %}
+{% endset %}
+<h1>{% trans with {'%name%': owner_names}%}Christmas list of %name%{% endtrans %}</h1>
 
 <dl>
 {% for item in list.items %}
-    {% if not is_mine or item.proposer == current_user %}
+    {% if not list.isOwner(current_user) or item.proposer == current_user %}
     <dt class="list-item-title">
         <strong class="title">{{ item.title }}</strong> <span class="proposer">{% trans with {'%name%': item.proposer} %}proposed by %name%{% endtrans %}</span>
         {% if item.proposer == current_user %}<a href="{{ path('kyklydse_christmaslist_list_edititem', {'list_id': list.id, 'item_id': item.id}) }}">{% trans %}Modify{% endtrans %}</a>{% endif %}
@@ -15,7 +20,7 @@
     <dd class="list-item-info">
         {% if item.url %}<a href="{{ item.url }}" class="more-info">{% trans %}More info{% endtrans %}</a>{% endif %}
         <p class="description">{{ item.description }}</p>
-        {% if not is_mine %}
+        {% if not list.isOwner(current_user) %}
         <ul class="comments">
         {% for comment in item.comments %}
             <li>

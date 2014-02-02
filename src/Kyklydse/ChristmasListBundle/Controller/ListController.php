@@ -53,7 +53,7 @@ class ListController extends Controller
     public function createAction(Request $request)
     {
         $list = new ChristmasList();
-        $list->setOwner($this->get('security.context')->getToken()->getUser());
+        $list->addOwner($this->get('security.context')->getToken()->getUser());
         $list->setName($this->get('translator')->trans('Christmas %year%', array('%year%' => date('Y'))));
         $form = $this->createForm(new ListType(), $list);
         

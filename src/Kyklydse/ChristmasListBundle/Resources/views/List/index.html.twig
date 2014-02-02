@@ -8,7 +8,9 @@
 
 <ul class="lists">
 {% for list in lists %}
-    <li><a href="{{ path('kyklydse_christmaslist_list_view' , {'id':list.id}) }}">{{ list.name }}</a> <span class="owner">({{ list.owner.name }})</span></li>
+    <li>
+        <a href="{{ path('kyklydse_christmaslist_list_view' , {'id':list.id}) }}">{{ list.name }}</a>
+        <span class="owner">({% for owner in list.owners %}{{ owner.name }}{% endfor %})</span></li>
 {% endfor %}
     <li><a href="{{ path('kyklydse_christmaslist_list_create') }}">{% trans %}New list{% endtrans %}</a></li>
 </ul>
