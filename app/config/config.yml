@@ -44,7 +44,7 @@ jms_security_extra:
 doctrine_mongodb:
     connections:
         default:
-            server: mongodb://localhost:27017
+            server: mongodb://mongodb:27017
             options:
                 connect: true
     default_database: christmaslist
