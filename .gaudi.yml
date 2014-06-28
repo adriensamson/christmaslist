@@ -12,3 +12,8 @@ applications:
         image: mongo
         volumes:
             ./app/var/mongo: /data/db
+
+binaries:
+    php:
+        type: custom
+        template: docker/php-cli/Dockerfile
