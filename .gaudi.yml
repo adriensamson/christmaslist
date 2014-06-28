@@ -1,20 +1,10 @@
 applications:
-    sf2:
-        type: nginx
-        links: [fpm]
-        custom:
-            documentRoot: /var/www/web
-            fastCgi: fpm
+    php-server:
+        type: custom
+        template: docker/php-server/Dockerfile
+        links: [mongodb]
         ports:
             8000: 8000
-        volumes:
-            .: /var/www
-    fpm:
-        type: custom
-        template: docker/php-fpm/Dockerfile
-        ports:
-            9009: 9009
-        links: [mongodb]
         volumes:
             .: /var/www
     mongodb:
