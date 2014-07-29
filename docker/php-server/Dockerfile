@@ -14,6 +14,6 @@ RUN sed -i 's|;date.timezone =|date.timezone = "Europe/Paris"|g' /etc/php5/fpm/p
 
 ADD default /etc/nginx/sites-enabled/default
 
-EXPOSE 8000
+EXPOSE 80
 CMD php5-fpm -R && nginx && /bin/bash
 
