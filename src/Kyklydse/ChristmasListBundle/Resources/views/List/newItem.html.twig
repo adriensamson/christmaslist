@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<form action="{{ path('kyklydse_christmaslist_list_newitem', {'list_id': list.id}) }}" method="post" {{ form_enctype(form) }}>
+<form action="{{ path('kyklydse_christmaslist_list_newitem', {'id': list.id}) }}" method="post" {{ form_enctype(form) }}>
     {{ form_errors(form) }}
 
     {{ form_rest(form) }}

@@ -8,9 +8,11 @@
 
 <ul class="lists">
 {% for list in lists %}
+{%  if list.isOwner(current_user) or list.isInvited(current_user) %}
     <li>
         <a href="{{ path('kyklydse_christmaslist_list_view' , {'id':list.id}) }}">{{ list.name }}</a>
         <span class="owner">({% for owner in list.owners %}{{ owner.name }}{% endfor %})</span></li>
+{% endif  %}
 {% endfor %}
     <li><a href="{{ path('kyklydse_christmaslist_list_create') }}">{% trans %}New list{% endtrans %}</a></li>
 </ul>

@@ -4,15 +4,16 @@ namespace Kyklydse\ChristmasListBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedException;
 use Kyklydse\ChristmasListBundle\Form\ListType;
 use Kyklydse\ChristmasListBundle\Form\ItemType;
 use Kyklydse\ChristmasListBundle\Form\CommentType;
 use Kyklydse\ChristmasListBundle\Document\ChristmasList;
 use Kyklydse\ChristmasListBundle\Document\Item;
 use Kyklydse\ChristmasListBundle\Document\Comment;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ListController extends Controller
 {
@@ -32,18 +33,33 @@ class ListController extends Controller
     
     /**
      * @Route("/list/id/{id}")
+     * @Security("list.isOwner(user) || list.isInvited(user)")
      * @Template()
      */
-    public function viewAction($id)
+    public function viewAction(ChristmasList $list)
     {
-        $list = $this->get('doctrine.odm.mongodb.document_manager')
-            ->getRepository('KyklydseChristmasListBundle:ChristmasList')
-            ->find($id);
-        if (!$list) {
-            throw $this->createNotFoundException('No list found for id '.$id);
-        }
         $currentUser = $this->get('security.context')->getToken()->getUser();
         return array('list' => $list, 'current_user' => $currentUser);
+    }
+
+    /**
+     * @Route("/list/id/{id}/edit")
+     * @Security("list.isOwner(user) || list.isInvited(user)")
+     * @Template()
+     */
+    public function editAction(ChristmasList $list, Request $request)
+    {
+        $form = $this->createForm(new ListType(), $list);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $dm = $this->get('doctrine.odm.mongodb.document_manager');
+            $dm->flush();
+
+            return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_index'));
+        }
+        $currentUser = $this->get('security.context')->getToken()->getUser();
+
+        return array('form' => $form->createView(), 'list' => $list, 'current_user' => $currentUser);
     }
     
     /**
@@ -56,63 +72,49 @@ class ListController extends Controller
         $list->addOwner($this->get('security.context')->getToken()->getUser());
         $list->setName($this->get('translator')->trans('Christmas %year%', array('%year%' => date('Y'))));
         $form = $this->createForm(new ListType(), $list);
-        
-        if ($request->getMethod() === 'POST') {
-            $form->bind($request);
-            
-            if ($form->isValid()) {
-                $dm = $this->get('doctrine.odm.mongodb.document_manager');
-                $dm->persist($list);
-                $dm->flush();
-                
-                return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_index'));
-            }
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $dm = $this->get('doctrine.odm.mongodb.document_manager');
+            $dm->persist($list);
+            $dm->flush();
+
+            return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_index'));
         }
-        
+
         return array('form' => $form->createView());
     }
     
     /**
-     * @Route("/list/item/new/{list_id}")
+     * @Route("/list/item/new/{id}")
+     * @Security("list.isOwner(user) || list.isInvited(user)")
      * @Template()
      */
-    public function newItemAction($list_id, Request $request)
+    public function newItemAction(ChristmasList $list, Request $request)
     {
-        $list = $this->get('doctrine.odm.mongodb.document_manager')
-            ->getRepository('KyklydseChristmasListBundle:ChristmasList')
-            ->find($list_id);
-        if (!$list) {
-            throw $this->createNotFoundException('No list found for id '.$list_id);
-        }
-        
         $item = new Item();
         $item->setProposer($this->get('security.context')->getToken()->getUser());
         $form = $this->createForm(new ItemType(), $item);
-        
-        if ($request->getMethod() === 'POST') {
-            $form->bind($request);
-        
-            if ($form->isValid()) {
-                $list->addItem($item);
-                $dm = $this->get('doctrine.odm.mongodb.document_manager');
-                $dm->flush();
-        
-                return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_view', array('id' => $list->getId())));
-            }
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $list->addItem($item);
+            $dm = $this->get('doctrine.odm.mongodb.document_manager');
+            $dm->flush();
+
+            return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_view', array('id' => $list->getId())));
         }
         
         return array('form' => $form->createView(), 'list' => $list);
     }
     
     /**
-    * @Route("/list/item/edit/{list_id}/{item_id}")
-    * @Template()
-    */
-    public function editItemAction($list_id, $item_id, Request $request)
+     * @Route("/list/item/edit/{id}/{item_id}")
+     * @Security("list.isOwner(user) || list.isInvited(user)")
+     * @Template()
+     */
+    public function editItemAction(ChristmasList $list, $item_id, Request $request)
     {
-        $list = $this->get('doctrine.odm.mongodb.document_manager')
-            ->getRepository('KyklydseChristmasListBundle:ChristmasList')
-            ->find($list_id);
         $items = $list->getItems()->filter(function ($e) use ($item_id) {
             return $e->getId() == $item_id;
         });
@@ -142,14 +144,12 @@ class ListController extends Controller
     }
     
     /**
-     * @Route("/list/item/comment/{list_id}/{item_id}")
+     * @Route("/list/item/comment/{id}/{item_id}")
+     * @Security("list.isOwner(user) || list.isInvited(user)")
      * @Template()
      */
-    public function commentItemAction($list_id, $item_id, Request $request)
+    public function commentItemAction(ChristmasList $list, $item_id, Request $request)
     {
-        $list = $this->get('doctrine.odm.mongodb.document_manager')
-            ->getRepository('KyklydseChristmasListBundle:ChristmasList')
-            ->find($list_id);
         $items = $list->getItems()->filter(function ($e) use ($item_id) {return $e->getId() == $item_id;});
         $item = $items->first();
         

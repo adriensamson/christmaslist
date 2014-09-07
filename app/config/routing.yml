@@ -1,7 +1,6 @@
 KyklydseChristmasListBundle:
     resource: "@KyklydseChristmasListBundle/Controller/"
     type:     annotation
-    prefix:   /
 
 # Internal routing configuration to handle ESI
 #_internal:

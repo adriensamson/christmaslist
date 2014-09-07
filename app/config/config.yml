@@ -60,3 +60,8 @@ fos_user:
         address: postmaster@kyklydse.com
         sender_name: Christmas Lists
 
+services:
+    sensio_framework_extra.converter.doctrine.mongodb:
+        class: %sensio_framework_extra.converter.doctrine.class%
+        arguments: [@doctrine_mongodb]
+        tags: [{ name:request.param_converter }]

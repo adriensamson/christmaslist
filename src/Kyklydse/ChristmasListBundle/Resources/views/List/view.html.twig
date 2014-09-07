@@ -8,14 +8,14 @@
         {% if not loop.last %},{% endif %}
     {% endfor %}
 {% endset %}
-<h1>{% trans with {'%name%': owner_names}%}Christmas list of %name%{% endtrans %}</h1>
+<h1>{% trans with {'%name%': owner_names}%}Christmas list of %name%{% endtrans %} <small><a href="{{ path('kyklydse_christmaslist_list_edit', {id: list.id}) }}">{% trans %}Edit{% endtrans %}</a></small></h1>
 
 <dl>
 {% for item in list.items %}
     {% if not list.isOwner(current_user) or item.proposer == current_user %}
     <dt class="list-item-title">
         <strong class="title">{{ item.title }}</strong> <span class="proposer">{% trans with {'%name%': item.proposer} %}proposed by %name%{% endtrans %}</span>
-        {% if item.proposer == current_user %}<a href="{{ path('kyklydse_christmaslist_list_edititem', {'list_id': list.id, 'item_id': item.id}) }}">{% trans %}Modify{% endtrans %}</a>{% endif %}
+        {% if item.proposer == current_user %}<a href="{{ path('kyklydse_christmaslist_list_edititem', {'id': list.id, 'item_id': item.id}) }}">{% trans %}Modify{% endtrans %}</a>{% endif %}
     </dt>
     <dd class="list-item-info">
         {% if item.url %}<a href="{{ item.url }}" class="more-info">{% trans %}More info{% endtrans %}</a>{% endif %}
@@ -28,13 +28,13 @@
                 <span class="comment-content">{{ comment.content }}</span>
             </li>
         {% endfor %}
-            <li><a href="{{ path('kyklydse_christmaslist_list_commentitem', {'list_id': list.id, 'item_id': item.id})}}">{% trans %}New comment{% endtrans %}</a></li>
+            <li><a href="{{ path('kyklydse_christmaslist_list_commentitem', {'id': list.id, 'item_id': item.id})}}">{% trans %}New comment{% endtrans %}</a></li>
         </ul>
         {% endif %}
     </dd>
     {% endif %}
 {% endfor %}
-    <dt><a href="{{ path('kyklydse_christmaslist_list_newitem', {'list_id': list.id}) }}">{% trans %}New item{% endtrans %}</a></dt>
+    <dt><a href="{{ path('kyklydse_christmaslist_list_newitem', {'id': list.id}) }}">{% trans %}New item{% endtrans %}</a></dt>
 </dl>
 
 <p><a href="{{ path('kyklydse_christmaslist_list_index') }}">{% trans %}Back to lists{% endtrans %}</a></p>

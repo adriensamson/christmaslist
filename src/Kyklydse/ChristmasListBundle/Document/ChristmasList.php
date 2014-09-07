@@ -2,6 +2,7 @@
 
 namespace Kyklydse\ChristmasListBundle\Document;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
@@ -20,10 +21,17 @@ class ChristmasList
     protected $name;
     
     /**
+     * @var User[]
      * @MongoDB\ReferenceMany(targetDocument="User")
      */
     protected $owners;
-    
+
+    /**
+     * @var User[]
+     * @MongoDB\ReferenceMany(targetDocument="User")
+     */
+    protected $invitedUsers;
+
     /**
      * @MongoDB\EmbedMany(targetDocument="Item")
      */
@@ -31,14 +39,15 @@ class ChristmasList
 
     public function __construct()
     {
-        $this->items = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->owners = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->items = new ArrayCollection();
+        $this->owners = new ArrayCollection();
+        $this->invitedUsers = new ArrayCollection();
     }
     
     /**
      * Get id
      *
-     * @return id $id
+     * @return \MongoId
      */
     public function getId()
     {
@@ -68,6 +77,24 @@ class ChristmasList
     public function isOwner(User $user)
     {
         return $this->owners->contains($user);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getInvitedUsers()
+    {
+        return $this->invitedUsers;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return bool
+     */
+    public function isInvited(User $user)
+    {
+        return $this->invitedUsers->contains($user);
     }
 
     /**

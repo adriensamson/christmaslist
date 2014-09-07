@@ -13,7 +13,8 @@ class ListType extends AbstractType
     {
         $builder
             ->add('owners', null, array('label' => 'Owners'))
-            ->add('name', null, array('label' => 'List name'));
+            ->add('name', null, array('label' => 'List name'))
+            ->add('invitedUsers', null, array('label' => 'Invited users'));
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver)
