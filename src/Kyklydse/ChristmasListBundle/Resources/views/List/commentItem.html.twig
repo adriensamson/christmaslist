@@ -8,5 +8,5 @@
 
     <button type="submit">{% trans %}Validate{% endtrans %}</button>
 </form>
-<a href="{{ path('kyklydse_christmaslist_list_view', {'id': list.id}) }}">{{ 'Back to list' | trans }}</a>
+<a class="button" href="{{ path('kyklydse_christmaslist_list_view', {'id': list.id}) }}">{{ 'Back to list' | trans }}</a>
 {% endblock %}

@@ -1,20 +1,20 @@
 {% extends 'KyklydseChristmasListBundle::layout.html.twig' %}
 
-{% block title %}{% trans %}List of all Christmas lists{% endtrans %}{% endblock %}
+{% block title %}{% trans %}All lists{% endtrans %}{% endblock %}
 
 {% block content %}
 
-<h1>{% trans %}List of all Christmas lists{% endtrans %}</h1>
+<h1>{% trans %}All lists{% endtrans %}</h1>
 
-<ul class="lists">
 {% for list in lists %}
 {%  if list.isOwner(current_user) or list.isInvited(current_user) %}
-    <li>
+    <h2>
         <a href="{{ path('kyklydse_christmaslist_list_view' , {'id':list.id}) }}">{{ list.name }}</a>
-        <span class="owner">({% for owner in list.owners %}{{ owner.name }}{% endfor %})</span></li>
+        <small>({% for owner in list.owners %}{{ owner.name }}{% endfor %})</small>
+    </h2>
 {% endif  %}
 {% endfor %}
-    <li><a href="{{ path('kyklydse_christmaslist_list_create') }}">{% trans %}New list{% endtrans %}</a></li>
-</ul>
+<a class="button" href="{{ path('kyklydse_christmaslist_list_create') }}">{% trans %}New list{% endtrans %}</a>
+
 
 {% endblock %}

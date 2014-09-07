@@ -2,41 +2,44 @@
 
 {% block content %}
 
-{% set owner_names %}
-    {% for owner in list.owners %}
-        {{ owner.name }}
-        {% if not loop.last %},{% endif %}
-    {% endfor %}
-{% endset %}
-<h1>{% trans with {'%name%': owner_names}%}Christmas list of %name%{% endtrans %} <small><a href="{{ path('kyklydse_christmaslist_list_edit', {id: list.id}) }}">{% trans %}Edit{% endtrans %}</a></small></h1>
-
-<dl>
-{% for item in list.items %}
-    {% if not list.isOwner(current_user) or item.proposer == current_user %}
-    <dt class="list-item-title">
-        <strong class="title">{{ item.title }}</strong> <span class="proposer">{% trans with {'%name%': item.proposer} %}proposed by %name%{% endtrans %}</span>
-        {% if item.proposer == current_user %}<a href="{{ path('kyklydse_christmaslist_list_edititem', {'id': list.id, 'item_id': item.id}) }}">{% trans %}Modify{% endtrans %}</a>{% endif %}
-    </dt>
-    <dd class="list-item-info">
-        {% if item.url %}<a href="{{ item.url }}" class="more-info">{% trans %}More info{% endtrans %}</a>{% endif %}
-        <p class="description">{{ item.description }}</p>
-        {% if not list.isOwner(current_user) %}
-        <ul class="comments">
-        {% for comment in item.comments %}
-            <li>
-                <span class="author">{{ comment.author }}</span>
-                <span class="comment-content">{{ comment.content }}</span>
-            </li>
+    {% set owner_names %}
+        {% for owner in list.owners %}
+            {{ owner.name }}
+            {% if not loop.last %},{% endif %}
         {% endfor %}
-            <li><a href="{{ path('kyklydse_christmaslist_list_commentitem', {'id': list.id, 'item_id': item.id})}}">{% trans %}New comment{% endtrans %}</a></li>
-        </ul>
-        {% endif %}
-    </dd>
-    {% endif %}
-{% endfor %}
-    <dt><a href="{{ path('kyklydse_christmaslist_list_newitem', {'id': list.id}) }}">{% trans %}New item{% endtrans %}</a></dt>
-</dl>
+    {% endset %}
 
-<p><a href="{{ path('kyklydse_christmaslist_list_index') }}">{% trans %}Back to lists{% endtrans %}</a></p>
+    <h1>{% trans with {'%name%': owner_names}%}%name%'s list{% endtrans %} <small><a href="{{ path('kyklydse_christmaslist_list_edit', {id: list.id}) }}">{% trans %}Edit{% endtrans %}</a></small></h1>
+
+    {% for item in list.items %}
+        {% if not list.isOwner(current_user) or item.proposer == current_user %}
+        <section>
+            <h3>
+                {{ item.title }}
+            </h3>
+            <h4 class="subheader">
+                {% trans with {'%name%': item.proposer} %}proposed by %name%{% endtrans %}
+                {% if item.url %}<a href="{{ item.url }}" class="more-info">{% trans %}More info{% endtrans %}</a>{% endif %}
+                {% if item.proposer == current_user %}
+                    <a href="{{ path('kyklydse_christmaslist_list_edititem', {'id': list.id, 'item_id': item.id}) }}">{% trans %}Edit{% endtrans %}</a>
+                {% endif %}
+            </h4>
+
+            <p class="description">{{ item.description | nl2br}}</p>
+            {% if not list.isOwner(current_user) %}
+                {% for comment in item.comments %}
+                    <blockquote>
+                        {{ comment.content | nl2br }}
+                        <cite>{{ comment.author }}</cite>
+                    </blockquote>
+                {% endfor %}
+                <a class="button" href="{{ path('kyklydse_christmaslist_list_commentitem', {'id': list.id, 'item_id': item.id})}}">{% trans %}New comment{% endtrans %}</a>
+
+            {% endif %}
+        </section>
+        {% endif %}
+    {% endfor %}
+    <a class="button" href="{{ path('kyklydse_christmaslist_list_newitem', {'id': list.id}) }}">{% trans %}New item{% endtrans %}</a>
+    <a class="button" href="{{ path('kyklydse_christmaslist_list_index') }}">{% trans %}Back to lists{% endtrans %}</a>
 
 {% endblock %}

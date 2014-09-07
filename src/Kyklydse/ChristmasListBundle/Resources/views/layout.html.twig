@@ -1,19 +1,20 @@
 {%  extends '::base.html.twig' %}
 
-{% block stylesheets %}
-    <link href="{{ asset('bundles/kyklydsechristmaslist/css/christmaslist.css') }}" type="text/css" rel="stylesheet" />
-{% endblock %}
-
 {%  block body %}
-<div id="page">
-    <div id="header">
-        <a href="{{ path('kyklydse_christmaslist_list_index') }}">{% trans %}Christmas List{% endtrans %}</a>
-    </div>
-    <div id="main">
+<nav class="top-bar">
+    <ul class="title-area">
+        <li class="name">
+            <h1><a href="{{ path('kyklydse_christmaslist_list_index') }}">{% trans %}Christmas List{% endtrans %}</a></h1>
+        </li>
+    </ul>
+    <section class="top-bar-section">
+        <ul class="right">
+            <li><a href="{{ path('kyklydse_christmaslist_list_index') }}">{% trans %}All lists{% endtrans %}</a></li>
+            <li><a href="{{ path('fos_user_security_logout') }}">{% trans %}Logout{% endtrans %}</a></li>
+        </ul>
+    </section>
+</nav>
+<div class="row">
     {% block content %}{% endblock %}
-    </div>
-    <div id="footer">
-        <a href="{{ path('fos_user_security_logout') }}">{% trans %}Logout{% endtrans %}</a> | <a href="{{ path('kyklydse_christmaslist_list_index') }}">{% trans %}Lists list{% endtrans %}</a>
-    </div>
 </div>
 {% endblock %}
