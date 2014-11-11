@@ -4,6 +4,7 @@ namespace Kyklydse\ChristmasListBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -174,5 +175,31 @@ class ListController extends Controller
         }
         
         return array('form' => $form->createView(), 'list' => $list, 'item' => $item);
+    }
+
+    /**
+     * @Route("/list/item/delete/{id}/{item_id}")
+     * @Method("POST")
+     * @Security("list.isOwner(user) || list.isInvited(user)")
+     */
+    public function deleteItemAction(ChristmasList $list, $item_id)
+    {
+        $items = $list->getItems()->filter(function ($e) use ($item_id) {
+                return $e->getId() == $item_id;
+            });
+        $item = $items->first();
+
+        if (!$item) {
+            throw $this->createNotFoundException('No item found for id ' . $item_id);
+        }
+
+        if ($item->getProposer() !== $this->getUser()) {
+            throw new AccessDeniedException();
+        }
+
+        $list->getItems()->removeElement($item);
+        $this->get('doctrine.odm.mongodb.document_manager')->flush();
+
+        return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_view', array('id' => $list->getId())));
     }
 }

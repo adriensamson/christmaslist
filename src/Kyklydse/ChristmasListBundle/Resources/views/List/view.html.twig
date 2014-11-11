@@ -20,7 +20,10 @@
                 {% trans with {'%name%': item.proposer} %}proposed by %name%{% endtrans %}
                 {% if item.url %}<a href="{{ item.url }}" class="more-info">{% trans %}More info{% endtrans %}</a>{% endif %}
                 {% if item.proposer == current_user %}
-                    <a href="{{ path('kyklydse_christmaslist_list_edititem', {'id': list.id, 'item_id': item.id}) }}">{% trans %}Edit{% endtrans %}</a>
+                    <a class="tiny button" href="{{ path('kyklydse_christmaslist_list_edititem', {'id': list.id, 'item_id': item.id}) }}">{% trans %}Edit{% endtrans %}</a>
+                    <form style="display:inline" action="{{ path('kyklydse_christmaslist_list_deleteitem', {'id': list.id, 'item_id': item.id}) }}" method="post">
+                        <button type="submit" class="tiny alert">{% trans %}Delete{% endtrans %}</button>
+                    </form>
                 {% endif %}
             </h4>
 
