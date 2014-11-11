@@ -6,7 +6,7 @@ server {
 
     server_name localhost;
 
-    rewrite ^/app\.php/?(.*)$ /$1 permanent;
+#    rewrite ^/app\.php/?(.*)$ /$1 permanent;
     rewrite ^/app_dev\.php/$ /app_dev.php permanent;
 
     location / {
