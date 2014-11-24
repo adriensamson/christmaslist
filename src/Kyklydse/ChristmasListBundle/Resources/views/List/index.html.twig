@@ -7,14 +7,12 @@
 <h1>{% trans %}All lists{% endtrans %}</h1>
 
 {% for list in lists %}
-{%  if list.isOwner(current_user) or list.isInvited(current_user) %}
     <h2>
         <a href="{{ path('kyklydse_christmaslist_list_view' , {'id':list.id}) }}">
             {% for owner in list.owners %}{{ owner.name }}{% if not loop.last %}, {% endif %}{% endfor %}
             <small>{{ list.name }}</small>
         </a>
     </h2>
-{% endif  %}
 {% endfor %}
 <a class="button" href="{{ path('kyklydse_christmaslist_list_create') }}">{% trans %}New list{% endtrans %}</a>
 

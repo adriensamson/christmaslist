@@ -2,6 +2,7 @@
 
 namespace Kyklydse\ChristmasListBundle\Controller;
 
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -24,11 +25,14 @@ class ListController extends Controller
      */
     public function indexAction()
     {
-        $lists = $this->get('doctrine.odm.mongodb.document_manager')
-            ->getRepository('KyklydseChristmasListBundle:ChristmasList')
-            ->findAll()
-            ;
         $currentUser = $this->get('security.context')->getToken()->getUser();
+
+        $dm = $this->get('doctrine.odm.mongodb.document_manager');
+        /* @var $dm DocumentManager */
+        $qb = $dm->createQueryBuilder('KyklydseChristmasListBundle:ChristmasList');
+        $qb->addOr($qb->expr()->field('owners')->elemMatch($qb->expr()->references($currentUser)));
+        $qb->addOr($qb->expr()->field('invitedUsers')->elemMatch($qb->expr()->references($currentUser)));
+        $lists = $qb->getQuery()->execute();
         return array('lists' => $lists, 'current_user' => $currentUser);
     }
     
