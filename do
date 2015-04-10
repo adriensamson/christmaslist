@@ -36,8 +36,8 @@ start () {
 }
 
 stop () {
-    docker stop christmaslist-mongo christmaslist-front
-    docker rm christmaslist-mongo christmaslist-front
+    docker stop christmaslist-front christmaslist-mongo
+    docker rm christmaslist-front christmaslist-mongo
 }
 
 composer () {
