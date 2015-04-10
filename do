@@ -1,8 +1,6 @@
 #!/usr/bin/env sh
 
 cd $(dirname $0)
-DO_DIR=$(pwd)
-DO=./$(basename $0)
 
 build () {
     docker build -t christmaslist-front docker/php-server
@@ -10,44 +8,50 @@ build () {
 }
 
 buildprod () {
-    $DO build
-    $DO composer install
-    $DO sf cache:clear --env=prod
+    build
+    composer install
+    sf cache:clear --env=prod
     rm -rf docker/php-server-prod/data
     mkdir docker/php-server-prod/data
     cp -rf app src web vendor docker/php-server-prod/data
     docker build -t christmaslist-front-prod docker/php-server-prod
 }
 
-run () {
-    docker rm christmaslist-mongo christmaslist-front
+startmongo () {
+    if docker inspect christmaslist-mongo 1>/dev/null 2>&1
+    then
+        if [ $(docker inspect -f '{{ .State.Running }}' christmaslist-mongo) = "false" ]
+        then
+            docker restart christmaslist-mongo
+        fi
+    else
+        docker run -itd -v $PWD/app/var/mongo:/data/db --name christmaslist-mongo mongo
+    fi
+}
 
-    docker run -d -t -i -v $DO_DIR/app/var/mongo:/data/db --name=christmaslist-mongo mongo
-    docker run -d -t -i -v $DO_DIR:/var/www --name=christmaslist-front --link=christmaslist-mongo:mongodb christmaslist-front
+start () {
+    startmongo
+    docker run -itd -v $PWD:/var/www --name christmaslist-front --link christmaslist-mongo:mongodb christmaslist-front
+    docker inspect -f '{{ .NetworkSettings.IPAddress }}' christmaslist-front
 }
 
 stop () {
     docker stop christmaslist-mongo christmaslist-front
+    docker rm christmaslist-mongo christmaslist-front
 }
 
 composer () {
-    docker run -t -i -v $(pwd):/var/www christmaslist-cli /usr/local/bin/composer $@
+    docker run -it -v $PWD:/var/www christmaslist-cli --link christmaslist-mongo:mongodb /usr/local/bin/composer $@
 }
 
 sf () {
-    docker run -t -i -v $(pwd):/var/www christmaslist-cli app/console $@
+    startmongo
+    docker run -it -v $PWD:/var/www christmaslist-cli app/console $@
 }
 
-if [ -z "$1" ]
+if [ $# -eq 0 ]
 then
-    echo "Usage: $DO <command>"
-    echo "Commands:"
-    echo "    build"
-    echo "    buildprod"
-    echo "    run"
-    echo "    stop"
-    echo "    composer"
-    echo "    sf"
+    start
     exit
 fi
 
