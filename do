@@ -18,20 +18,35 @@ buildprod () {
 }
 
 startmongo () {
+    if ! docker inspect christmaslist-data-mongo 1>/dev/null 2>&1
+    then
+        docker run --name christmaslist-data-mongo mongo true
+    fi
+
     if docker inspect christmaslist-mongo 1>/dev/null 2>&1
     then
-        if [ $(docker inspect -f '{{ .State.Running }}' christmaslist-mongo) = "false" ]
+        if [ "$(docker inspect -f '{{ .State.Running }}' christmaslist-mongo)" != "true" ]
         then
             docker restart christmaslist-mongo
         fi
     else
-        docker run -itd -v $PWD/app/var/mongo:/data/db --name christmaslist-mongo mongo
+        docker run -itd --volumes-from christmaslist-data-mongo --name christmaslist-mongo mongo
     fi
 }
 
 start () {
     startmongo
-    docker run -itd -v $PWD:/var/www --name christmaslist-front --link christmaslist-mongo:mongodb christmaslist-front
+
+    if [ "$(docker inspect -f '{{ .State.Running }}' christmaslist-front 2>/dev/null)" != "<no value>" ]
+    then
+        if [ "$(docker inspect -f '{{ .State.Running }}' christmaslist-front)" != "true" ]
+        then
+            docker restart christmaslist-front
+        fi
+    else
+        docker run -itd -v $PWD:/var/www --name christmaslist-front --link christmaslist-mongo:mongodb christmaslist-front
+    fi
+
     docker inspect -f '{{ .NetworkSettings.IPAddress }}' christmaslist-front
 }
 
@@ -41,12 +56,13 @@ stop () {
 }
 
 composer () {
-    docker run -it -v $PWD:/var/www christmaslist-cli --link christmaslist-mongo:mongodb /usr/local/bin/composer $@
+    startmongo
+    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/var/www christmaslist-cli --link christmaslist-mongo:mongodb /usr/local/bin/composer $@
 }
 
 sf () {
     startmongo
-    docker run -it -v $PWD:/var/www christmaslist-cli app/console $@
+    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/var/www christmaslist-cli --link christmaslist-mongo:mongodb app/console $@
 }
 
 if [ $# -eq 0 ]

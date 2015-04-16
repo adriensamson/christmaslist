@@ -5,5 +5,4 @@ vendor
 web/bundles
 app/cache
 app/logs
-app/var
 docker/php-server-prod/data
