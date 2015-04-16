@@ -14,5 +14,7 @@ RUN sed -i 's|;date.timezone =|date.timezone = "Europe/Paris"|g' /etc/php5/fpm/p
 COPY default /etc/nginx/sites-enabled/default
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+VOLUME /srv
+WORKDIR /srv
 EXPOSE 80
 CMD ["supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]

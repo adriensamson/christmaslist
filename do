@@ -11,16 +11,18 @@ buildprod () {
     build
 
     docker rm christmaslist-code-front
-    docker run --name christmaslist-code-front -v /var/www christmaslist-front true
+    docker run --name christmaslist-code-front christmaslist-front true
 
-    docker run --rm --volumes-from christmaslist-code-front -v $PWD:/workdir christmaslist-front cp -rf /workdir/app /workdir/src /workdir/web /workdir/composer.json /workdir/composer.lock /var/www
+    docker run --rm --volumes-from christmaslist-code-front -v $PWD:/workdir christmaslist-front cp -rf /workdir/app /workdir/src /workdir/web /workdir/composer.json /workdir/composer.lock /srv
+    docker run --rm --volumes-from christmaslist-code-front christmaslist-front rm -rf /srv/app/cache /srv/app/logs
+    docker run --rm --volumes-from christmaslist-code-front christmaslist-front mkdir -p /srv/app/cache /srv/app/logs
+
     docker run -it --rm --volumes-from christmaslist-code-front christmaslist-cli /usr/local/bin/composer install
     docker run -it --rm --volumes-from christmaslist-code-front christmaslist-cli app/console cache:clear --env=prod
 
-    docker run --rm --volumes-from christmaslist-code-front christmaslist-front mkdir -p /var/www/app/cache /var/www/app/logs
-    docker run --rm --volumes-from christmaslist-code-front christmaslist-front chgrp -R www-data /var/www/app/cache /var/www/app/logs
-    docker run --rm --volumes-from christmaslist-code-front christmaslist-front chmod -R g+w /var/www/app/cache /var/www/app/logs
-    docker run --rm --volumes-from christmaslist-code-front christmaslist-front rm /var/www/web/app_dev.php
+    docker run --rm --volumes-from christmaslist-code-front christmaslist-front chgrp -R www-data /srv/app/cache /srv/app/logs
+    docker run --rm --volumes-from christmaslist-code-front christmaslist-front chmod -R g+w /srv/app/cache /srv/app/logs
+    docker run --rm --volumes-from christmaslist-code-front christmaslist-front rm /srv/web/app_dev.php
 }
 
 startmongo () {
@@ -50,7 +52,7 @@ start () {
             docker restart christmaslist-front
         fi
     else
-        docker run -itd -v $PWD:/var/www --name christmaslist-front --link christmaslist-mongo:mongodb christmaslist-front
+        docker run -itd -v $PWD:/srv --name christmaslist-front --link christmaslist-mongo:mongodb christmaslist-front
     fi
 
     docker inspect -f '{{ .NetworkSettings.IPAddress }}' christmaslist-front
@@ -70,12 +72,12 @@ stop () {
 
 composer () {
     startmongo
-    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/var/www --link christmaslist-mongo:mongodb christmaslist-cli /usr/local/bin/composer $@
+    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/srv --link christmaslist-mongo:mongodb christmaslist-cli /usr/local/bin/composer $@
 }
 
 sf () {
     startmongo
-    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/var/www --link christmaslist-mongo:mongodb christmaslist-cli app/console $@
+    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/srv --link christmaslist-mongo:mongodb christmaslist-cli app/console $@
 }
 
 if [ $# -eq 0 ]
