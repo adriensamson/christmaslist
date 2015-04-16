@@ -9,12 +9,18 @@ build () {
 
 buildprod () {
     build
-    composer install
-    sf cache:clear --env=prod
-    rm -rf docker/php-server-prod/data
-    mkdir docker/php-server-prod/data
-    cp -rf app src web vendor docker/php-server-prod/data
-    docker build -t christmaslist-front-prod docker/php-server-prod
+
+    docker rm christmaslist-code-front
+    docker run --name christmaslist-code-front -v /var/www christmaslist-front true
+
+    docker run --rm --volumes-from christmaslist-code-front -v $PWD:/workdir christmaslist-front cp -rf /workdir/app /workdir/src /workdir/web /workdir/composer.json /workdir/composer.lock /var/www
+    docker run -it --rm --volumes-from christmaslist-code-front christmaslist-cli /usr/local/bin/composer install
+    docker run -it --rm --volumes-from christmaslist-code-front christmaslist-cli app/console cache:clear --env=prod
+
+    docker run --rm --volumes-from christmaslist-code-front christmaslist-front mkdir -p /var/www/app/cache /var/www/app/logs
+    docker run --rm --volumes-from christmaslist-code-front christmaslist-front chgrp -R www-data /var/www/app/cache /var/www/app/logs
+    docker run --rm --volumes-from christmaslist-code-front christmaslist-front chmod -R g+w /var/www/app/cache /var/www/app/logs
+    docker run --rm --volumes-from christmaslist-code-front christmaslist-front rm /var/www/web/app_dev.php
 }
 
 startmongo () {
@@ -50,6 +56,13 @@ start () {
     docker inspect -f '{{ .NetworkSettings.IPAddress }}' christmaslist-front
 }
 
+startprod () {
+    startmongo
+
+    docker run -itd --volumes-from christmaslist-code-front --name christmaslist-front-prod --link christmaslist-mongo:mongodb christmaslist-front
+    docker inspect -f '{{ .NetworkSettings.IPAddress }}' christmaslist-front-prod
+}
+
 stop () {
     docker stop christmaslist-front christmaslist-mongo
     docker rm christmaslist-front christmaslist-mongo
@@ -57,12 +70,12 @@ stop () {
 
 composer () {
     startmongo
-    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/var/www christmaslist-cli --link christmaslist-mongo:mongodb /usr/local/bin/composer $@
+    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/var/www --link christmaslist-mongo:mongodb christmaslist-cli /usr/local/bin/composer $@
 }
 
 sf () {
     startmongo
-    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/var/www christmaslist-cli --link christmaslist-mongo:mongodb app/console $@
+    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/var/www --link christmaslist-mongo:mongodb christmaslist-cli app/console $@
 }
 
 if [ $# -eq 0 ]
