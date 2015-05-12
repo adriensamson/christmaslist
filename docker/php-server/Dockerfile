@@ -2,9 +2,7 @@ FROM stackbrew/debian:wheezy
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN echo "deb http://http.debian.net/debian wheezy-backports main" >/etc/apt/sources.list.d/backports.list
-
-RUN apt-get update && apt-get install -y nginx php5-fpm php5-mongo php5-mcrypt php5-intl php5-curl supervisor
+RUN apt-get update && apt-get install -y nginx php5-fpm php5-mysql php5-mcrypt php5-intl php5-curl supervisor
 
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 

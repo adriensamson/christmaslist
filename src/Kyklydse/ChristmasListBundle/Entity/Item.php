@@ -1,49 +1,43 @@
 <?php
 
-namespace Kyklydse\ChristmasListBundle\Document;
+namespace Kyklydse\ChristmasListBundle\Entity;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-
-/**
- * @MongoDB\EmbeddedDocument
- */
 class Item
 {
     /**
-     * @MongoDB\Id
+     * @var int
      */
     protected $id;
     
-    
     /**
-     * @MongoDB\String
+     * @var string
      */
     protected $title;
     
     /**
-     * @MongoDB\String
+     * @var string
      */
     protected $description;
     
     /**
-     * @MongoDB\String
+     * @var string
      */
     protected $url;
     
     /**
-     * @MongoDB\ReferenceOne(targetDocument="User")
+     * @var User
      */
     protected $proposer;
     
     /**
-     * @MongoDB\EmbedMany(targetDocument="Comment")
+     * @var Comment[]
      */
     protected $comments;
 
     /**
      * Get id
      *
-     * @return id $id
+     * @return int
      */
     public function getId()
     {
@@ -113,9 +107,9 @@ class Item
     /**
      * Set proposer
      *
-     * @param Kyklydse\ChristmasListBundle\Document\User $proposer
+     * @param User $proposer
      */
-    public function setProposer(\Kyklydse\ChristmasListBundle\Document\User $proposer)
+    public function setProposer(User $proposer)
     {
         $this->proposer = $proposer;
     }
@@ -123,7 +117,7 @@ class Item
     /**
      * Get proposer
      *
-     * @return Kyklydse\ChristmasListBundle\Document\User $proposer
+     * @return User $proposer
      */
     public function getProposer()
     {
@@ -137,9 +131,9 @@ class Item
     /**
      * Add comment
      *
-     * @param Kyklydse\ChristmasListBundle\Document\Comment $comment
+     * @param Comment $comment
      */
-    public function addComment(\Kyklydse\ChristmasListBundle\Document\Comment $comment)
+    public function addComment(Comment $comment)
     {
         $this->comments[] = $comment;
     }
@@ -147,7 +141,7 @@ class Item
     /**
      * Get comments
      *
-     * @return Doctrine\Common\Collections\Collection $comments
+     * @return \Doctrine\Common\Collections\Collection $comments
      */
     public function getComments()
     {

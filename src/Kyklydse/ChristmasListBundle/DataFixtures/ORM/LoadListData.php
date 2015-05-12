@@ -1,9 +1,9 @@
 <?php
 
-namespace Kyklydse\ChristmasListBundle\DataFixtures\MongoDB;
+namespace Kyklydse\ChristmasListBundle\DataFixtures\ORM;
 
-use Kyklydse\ChristmasListBundle\Document\ChristmasList;
-use Kyklydse\ChristmasListBundle\Document\Item;
+use Kyklydse\ChristmasListBundle\Entity\ChristmasList;
+use Kyklydse\ChristmasListBundle\Entity\Item;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -14,7 +14,8 @@ class LoadListData extends AbstractFixture implements OrderedFixtureInterface
     {
         $list = new ChristmasList();
         $list->setName('Test');
-        $list->setOwner($this->getReference('test-user1'));
+        $list->addOwner($this->getReference('test-user1'));
+        $list->getInvitedUsers()->add($this->getReference('test-user2'));
         
         $item1 = new Item();
         $item1->setTitle('Test');

@@ -1,24 +1,17 @@
 <?php
 
-namespace Kyklydse\ChristmasListBundle\Document;
+namespace Kyklydse\ChristmasListBundle\Entity;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-use FOS\UserBundle\Document\User as BaseUser;
+use FOS\UserBundle\Entity\User as BaseUser;
 
-/**
- * @MongoDB\Document
- */
 class User extends BaseUser
 {
-    /**
-     * @MongoDB\Id
-     */
     protected $id;
 
     /**
      * Get id
      *
-     * @return id $id
+     * @return int $id
      */
     public function getId()
     {

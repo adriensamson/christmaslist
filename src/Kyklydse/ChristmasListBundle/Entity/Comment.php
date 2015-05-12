@@ -1,33 +1,28 @@
 <?php
 
-namespace Kyklydse\ChristmasListBundle\Document;
+namespace Kyklydse\ChristmasListBundle\Entity;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-
-/**
- * @MongoDB\EmbeddedDocument
- */
 class Comment
 {
     /**
-     * @MongoDB\Id
+     * @var int
      */
     protected $id;
     
     /**
-     * @MongoDB\String
+     * @var string
      */
     protected $content;
     
     /**
-     * @MongoDB\ReferenceOne(targetDocument="User")
+     * @var User
      */
     protected $author;
 
     /**
      * Get id
      *
-     * @return id $id
+     * @return int $id
      */
     public function getId()
     {
@@ -57,9 +52,9 @@ class Comment
     /**
      * Set author
      *
-     * @param Kyklydse\ChristmasListBundle\Document\User $author
+     * @param User $author
      */
-    public function setAuthor(\Kyklydse\ChristmasListBundle\Document\User $author)
+    public function setAuthor(User $author)
     {
         $this->author = $author;
     }
@@ -67,7 +62,7 @@ class Comment
     /**
      * Get author
      *
-     * @return Kyklydse\ChristmasListBundle\Document\User $author
+     * @return User $author
      */
     public function getAuthor()
     {

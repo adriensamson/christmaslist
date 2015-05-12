@@ -38,30 +38,20 @@ assetic:
 swiftmailer:
     transport: %mailer_transport%
 
-jms_security_extra:
-    secure_all_services: false
-
-doctrine_mongodb:
-    connections:
-        default:
-            server: mongodb://mongodb:27017
-            options:
-                connect: true
-    default_database: christmaslist
-    document_managers:
-        default:
-            auto_mapping: true
-
+doctrine:
+    dbal:
+        driver: pdo_mysql
+        host: mysql
+        user: root
+        dbname: christmaslist
+    orm:
+        mappings:
+            FOSUserBundle: ~
+            KyklydseChristmasListBundle: ~
 fos_user:
-    db_driver: mongodb # other valid values are 'mongodb', 'couchdb' and 'propel'
+    db_driver: orm
     firewall_name: main
-    user_class: Kyklydse\ChristmasListBundle\Document\User
+    user_class: Kyklydse\ChristmasListBundle\Entity\User
     from_email:
         address: postmaster@kyklydse.com
         sender_name: Christmas Lists
-
-services:
-    sensio_framework_extra.converter.doctrine.mongodb:
-        class: %sensio_framework_extra.converter.doctrine.class%
-        arguments: [@doctrine_mongodb]
-        tags: [{ name:request.param_converter }]

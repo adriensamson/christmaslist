@@ -1,8 +1,8 @@
 <?php
 
-namespace Kyklydse\ChristmasListBundle\DataFixtures\MongoDB;
+namespace Kyklydse\ChristmasListBundle\DataFixtures\ORM;
 
-use Kyklydse\ChristmasListBundle\Document\User;
+use Kyklydse\ChristmasListBundle\Entity\User;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;

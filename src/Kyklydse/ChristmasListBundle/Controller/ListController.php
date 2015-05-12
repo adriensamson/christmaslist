@@ -2,7 +2,7 @@
 
 namespace Kyklydse\ChristmasListBundle\Controller;
 
-use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Kyklydse\ChristmasListBundle\Form\ListType;
 use Kyklydse\ChristmasListBundle\Form\ItemType;
 use Kyklydse\ChristmasListBundle\Form\CommentType;
-use Kyklydse\ChristmasListBundle\Document\ChristmasList;
-use Kyklydse\ChristmasListBundle\Document\Item;
-use Kyklydse\ChristmasListBundle\Document\Comment;
+use Kyklydse\ChristmasListBundle\Entity\ChristmasList;
+use Kyklydse\ChristmasListBundle\Entity\Item;
+use Kyklydse\ChristmasListBundle\Entity\Comment;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ListController extends Controller
@@ -27,12 +27,14 @@ class ListController extends Controller
     {
         $currentUser = $this->get('security.context')->getToken()->getUser();
 
-        $dm = $this->get('doctrine.odm.mongodb.document_manager');
-        /* @var $dm DocumentManager */
-        $qb = $dm->createQueryBuilder('KyklydseChristmasListBundle:ChristmasList');
-        $qb->addOr($qb->expr()->field('owners')->elemMatch($qb->expr()->references($currentUser)));
-        $qb->addOr($qb->expr()->field('invitedUsers')->elemMatch($qb->expr()->references($currentUser)));
-        $lists = $qb->getQuery()->execute();
+        $em = $this->getDoctrine()->getManager();
+        /** @var EntityManager $em */
+        $qb = $em->getRepository('KyklydseChristmasListBundle:ChristmasList')->createQueryBuilder('l');
+        $qb->leftJoin('l.owners', 'o');
+        $qb->leftJoin('l.invitedUsers', 'i');
+        $qb->where('o = :user OR i = :user');
+        $qb->setParameter(':user', $currentUser);
+        $lists = $qb->getQuery()->getResult();
         return array('lists' => $lists, 'current_user' => $currentUser);
     }
     
@@ -57,8 +59,8 @@ class ListController extends Controller
         $form = $this->createForm(new ListType(), $list);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $dm = $this->get('doctrine.odm.mongodb.document_manager');
-            $dm->flush();
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
 
             return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_index'));
         }
@@ -80,9 +82,9 @@ class ListController extends Controller
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $dm = $this->get('doctrine.odm.mongodb.document_manager');
-            $dm->persist($list);
-            $dm->flush();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($list);
+            $em->flush();
 
             return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_index'));
         }
@@ -104,8 +106,8 @@ class ListController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $list->addItem($item);
-            $dm = $this->get('doctrine.odm.mongodb.document_manager');
-            $dm->flush();
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
 
             return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_view', array('id' => $list->getId())));
         }
@@ -138,8 +140,8 @@ class ListController extends Controller
             $form->bind($request);
     
             if ($form->isValid()) {
-                $dm = $this->get('doctrine.odm.mongodb.document_manager');
-                $dm->flush();
+                $em = $this->getDoctrine()->getManager();
+                $em->flush();
     
                 return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_view', array('id' => $list->getId())));
             }
@@ -171,8 +173,8 @@ class ListController extends Controller
         
             if ($form->isValid()) {
                 $item->addComment($comment);
-                $dm = $this->get('doctrine.odm.mongodb.document_manager');
-                $dm->flush();
+                $em = $this->getDoctrine()->getManager();
+                $em->flush();
         
                 return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_view', array('id' => $list->getId())));
             }
@@ -202,7 +204,7 @@ class ListController extends Controller
         }
 
         $list->getItems()->removeElement($item);
-        $this->get('doctrine.odm.mongodb.document_manager')->flush();
+        $this->getDoctrine()->getManager()->flush();
 
         return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_view', array('id' => $list->getId())));
     }

@@ -1,0 +1,23 @@
+Kyklydse\ChristmasListBundle\Entity\ChristmasList:
+    type: entity
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+    manyToMany:
+        owners:
+            targetEntity: Kyklydse\ChristmasListBundle\Entity\User
+            joinTable:
+                name: christmaslist_owner
+        invitedUsers:
+            targetEntity: Kyklydse\ChristmasListBundle\Entity\User
+            joinTable:
+                name: christmaslist_invited_user
+        items:
+            targetEntity: Kyklydse\ChristmasListBundle\Entity\Item
+            cascade: [all]
+            orphanRemoval: true

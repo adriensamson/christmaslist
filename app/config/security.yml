@@ -9,6 +9,9 @@ security:
             iterations: 1
 
     firewalls:
+        dev:
+            pattern: ^/_(wdt|profiler)/
+            anonymous: true
         main:
             pattern: ^/
             form_login:
@@ -17,6 +20,7 @@ security:
             anonymous:    true
 
     access_control:
+        - { path: ^/_(wdt|profiler), role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }

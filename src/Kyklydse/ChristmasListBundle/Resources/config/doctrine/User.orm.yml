@@ -1,0 +1,7 @@
+Kyklydse\ChristmasListBundle\Entity\User:
+    type: entity
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO

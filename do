@@ -25,25 +25,25 @@ buildprod () {
     docker run --rm --volumes-from christmaslist-code-front christmaslist-front rm /srv/web/app_dev.php
 }
 
-startmongo () {
-    if ! docker inspect christmaslist-data-mongo 1>/dev/null 2>&1
+startmysql () {
+    if ! docker inspect christmaslist-data-mysql 1>/dev/null 2>&1
     then
-        docker run --name christmaslist-data-mongo mongo true
+        docker run --name christmaslist-data-mysql adriensamson/mysql true
     fi
 
-    if docker inspect christmaslist-mongo 1>/dev/null 2>&1
+    if docker inspect christmaslist-mysql 1>/dev/null 2>&1
     then
-        if [ "$(docker inspect -f '{{ .State.Running }}' christmaslist-mongo)" != "true" ]
+        if [ "$(docker inspect -f '{{ .State.Running }}' christmaslist-mysql)" != "true" ]
         then
-            docker restart christmaslist-mongo
+            docker restart christmaslist-mysql
         fi
     else
-        docker run -itd --volumes-from christmaslist-data-mongo --name christmaslist-mongo mongo
+        docker run -itd --volumes-from christmaslist-data-mysql --name christmaslist-mysql adriensamson/mysql
     fi
 }
 
 start () {
-    startmongo
+    startmysql
 
     if [ "$(docker inspect -f '{{ .State.Running }}' christmaslist-front 2>/dev/null)" != "<no value>" ]
     then
@@ -52,16 +52,16 @@ start () {
             docker restart christmaslist-front
         fi
     else
-        docker run -itd -v $PWD:/srv --name christmaslist-front --link christmaslist-mongo:mongodb christmaslist-front
+        docker run -itd -v $PWD:/srv --name christmaslist-front --link christmaslist-mysql:mysql christmaslist-front
     fi
 
     docker inspect -f '{{ .NetworkSettings.IPAddress }}' christmaslist-front
 }
 
 startprod () {
-    startmongo
+    startmysql
 
-    docker run -itd --volumes-from christmaslist-code-front --name christmaslist-front-prod --link christmaslist-mongo:mongodb christmaslist-front
+    docker run -itd --volumes-from christmaslist-code-front --name christmaslist-front-prod --link christmaslist-mysql:mysql christmaslist-front
     docker inspect -f '{{ .NetworkSettings.IPAddress }}' christmaslist-front-prod
 }
 
@@ -71,13 +71,13 @@ stop () {
 }
 
 composer () {
-    startmongo
-    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/srv --link christmaslist-mongo:mongodb christmaslist-cli /usr/local/bin/composer $@
+    startmysql
+    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/srv --link christmaslist-mysql:mysql christmaslist-cli /usr/local/bin/composer $@
 }
 
 sf () {
-    startmongo
-    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/srv --link christmaslist-mongo:mongodb christmaslist-cli app/console $@
+    startmysql
+    docker run -it --rm -u $(id -u):$(id -g) -v $PWD:/srv --link christmaslist-mysql:mysql christmaslist-cli app/console $@
 }
 
 if [ $# -eq 0 ]

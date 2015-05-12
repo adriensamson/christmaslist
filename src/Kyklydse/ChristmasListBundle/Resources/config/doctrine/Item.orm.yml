@@ -1,0 +1,24 @@
+Kyklydse\ChristmasListBundle\Entity\Item:
+    type: entity
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        title:
+            type: string
+        description:
+            type: text
+            nullable: false
+        url:
+            type: string
+            nullable: true
+    manyToOne:
+        proposer:
+            targetEntity: Kyklydse\ChristmasListBundle\Entity\User
+    manyToMany:
+        comments:
+            targetEntity: Kyklydse\ChristmasListBundle\Entity\Comment
+            cascade: [all]
+            orphanRemoval: true

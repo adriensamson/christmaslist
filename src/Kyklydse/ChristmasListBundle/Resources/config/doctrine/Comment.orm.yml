@@ -1,0 +1,13 @@
+Kyklydse\ChristmasListBundle\Entity\Comment:
+    type: entity
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        content:
+            type: text
+    manyToOne:
+        author:
+            targetEntity: Kyklydse\ChristmasListBundle\Entity\User

@@ -1,39 +1,33 @@
 <?php
 
-namespace Kyklydse\ChristmasListBundle\Document;
+namespace Kyklydse\ChristmasListBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
-/**
- * @MongoDB\Document
- */
 class ChristmasList
 {
     /**
-     * @MongoDB\Id
+     * @var int
      */
     protected $id;
     
     /**
-     * @MongoDB\String
+     * @var string
      */
     protected $name;
     
     /**
      * @var User[]
-     * @MongoDB\ReferenceMany(targetDocument="User")
      */
     protected $owners;
 
     /**
      * @var User[]
-     * @MongoDB\ReferenceMany(targetDocument="User")
      */
     protected $invitedUsers;
 
     /**
-     * @MongoDB\EmbedMany(targetDocument="Item")
+     * @var Item[]
      */
     protected $items;
 
