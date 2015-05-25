@@ -14,15 +14,18 @@ class FacebookService
     private $appSecret;
     private $router;
     private $callbackRoute;
+    private $homeRoute;
+    private $profileRoute;
 
-
-    public function __construct($clientId, $clientSecret, RouterInterface $router, $callbackRoute)
+    public function __construct($clientId, $clientSecret, RouterInterface $router, $callbackRoute, $homeRoute, $profileRoute)
     {
         $this->appId = $clientId;
         $this->appSecret = $clientSecret;
         FacebookSession::setDefaultApplication($this->appId, $this->appSecret);
         $this->router = $router;
         $this->callbackRoute = $callbackRoute;
+        $this->homeRoute = $homeRoute;
+        $this->profileRoute = $profileRoute;
     }
 
     public function getLoginUrl()
@@ -30,6 +33,15 @@ class FacebookService
         return $this->getRedirectLoginHelper()->getLoginUrl([
             'email',
             'user_friends',
+        ]);
+    }
+
+    public function getMessageUrl()
+    {
+        return 'http://www.facebook.com/dialog/send?' . http_build_query([
+            'app_id' => $this->appId,
+            'link' => $this->router->generate($this->homeRoute,  [], true),
+            'redirect_uri' => $this->router->generate($this->profileRoute, [], true),
         ]);
     }
 

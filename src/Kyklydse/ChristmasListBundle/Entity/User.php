@@ -71,7 +71,9 @@ class User extends BaseUser
 
     public function addFriend(User $user)
     {
-        $this->friends->add($user);
+        if (!$this->friends->contains($user)) {
+            $this->friends->add($user);
+        }
         if ($this->invitedFriends->contains($user)) {
             $this->removeInvitedFriend($user);
         }

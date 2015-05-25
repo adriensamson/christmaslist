@@ -22,6 +22,11 @@ facebook_redirect:
     defaults:
         _controller: KyklydseChristmasListBundle:Facebook:redirect
 
+facebook_invite:
+    pattern: /profile/invite-facebook
+    defaults:
+        _controller: KyklydseChristmasListBundle:Facebook:invite
+
 facebook_callback:
     pattern: /login/check-facebook
     defaults:

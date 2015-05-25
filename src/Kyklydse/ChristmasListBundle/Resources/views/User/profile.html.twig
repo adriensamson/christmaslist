@@ -15,7 +15,7 @@
     {% if user.facebookId %}
         {% trans %}Linked with Facebook{% endtrans %}
     {% else %}
-        <a class="button" href="{{ path('facebook_redirect') }}">
+        <a class="button" href="{{ path('facebook_redirect', {return: 'profile'}) }}">
             {% trans %}Link with Facebook{% endtrans %}
         </a>
     {% endif %}
@@ -27,6 +27,11 @@
         <li>{{ friend.username }}</li>
     {% endfor %}
     </ul>
+    {% if user.facebookId %}
+        <a class="button" href="{{ path('facebook_redirect', {return: 'profile'}) }}">{% trans %}Update Facebook friends{% endtrans %}</a>
+        <a class="button" href="{{ path('facebook_invite') }}">{% trans %}Invite Facebook friends{% endtrans %}</a>
+        <br/>
+    {% endif %}
 
     <a class="button" href="{{ path('user_friends_friends') }}">{% trans %}See my friends' friends{% endtrans %}</a>
 

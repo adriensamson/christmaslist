@@ -10,6 +10,8 @@
             <argument>%facebook.client_secret%</argument>
             <argument type="service" id="router"/>
             <argument>facebook_callback</argument>
+            <argument>kyklydse_christmaslist_list_index</argument>
+            <argument>user_profile</argument>
         </service>
     </services>
 </container>

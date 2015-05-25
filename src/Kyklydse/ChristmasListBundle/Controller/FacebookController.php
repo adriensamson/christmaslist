@@ -7,18 +7,29 @@ use Facebook\GraphUser;
 use Kyklydse\ChristmasListBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class FacebookController extends Controller
 {
-    public function redirectAction()
+    public function redirectAction(Request $request)
     {
+        if ($request->query->get('return') === 'profile') {
+            $request->getSession()->set('facebook_return', 'profile');
+        }
         $facebook = $this->get('kyklydse_christmas_list.facebook');
 
         return new RedirectResponse($facebook->getLoginUrl());
     }
 
-    public function callbackAction()
+    public function inviteAction()
+    {
+        $facebook = $this->get('kyklydse_christmas_list.facebook');
+
+        return new RedirectResponse($facebook->getMessageUrl());
+    }
+
+    public function callbackAction(Request $request)
     {
         $facebook = $this->get('kyklydse_christmas_list.facebook');
         $session = $facebook->getSessionFromRedirect();
@@ -53,7 +64,13 @@ class FacebookController extends Controller
         $em->flush();
         $this->get('security.context')->setToken(new UsernamePasswordToken($user, null, 'main'));
 
-        return $this->redirectToRoute('kyklydse_christmaslist_list_index');
+        $return = 'kyklydse_christmaslist_list_index';
+        if ($request->getSession()->get('facebook_return') === 'profile') {
+            $return = 'user_profile';
+            $request->getSession()->set('facebook_return', null);
+        }
+
+        return $this->redirectToRoute($return);
     }
 
     private function updateFriends(User $user, FacebookSession $session)
