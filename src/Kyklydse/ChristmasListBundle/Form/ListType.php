@@ -11,10 +11,24 @@ class ListType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $owners = $options['data']->getOwners()->toArray();
+        $users = $owners;
+        foreach ($owners as $owner) {
+            $users = array_merge($users, $owner->getFriends());
+        }
+
         $builder
-            ->add('owners', null, array('label' => 'Owners', 'expanded' => true))
+            ->add('owners', null, array(
+                'label' => 'Owners',
+                'expanded' => true,
+                'choices' => $users,
+            ))
             ->add('name', null, array('label' => 'List name'))
-            ->add('invitedUsers', null, array('label' => 'Invited users', 'expanded' => true));
+            ->add('invitedUsers', null, array(
+                'label' => 'Invited users',
+                'expanded' => true,
+                'choices' => $users,
+            ));
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver)
