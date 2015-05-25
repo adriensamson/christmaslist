@@ -2,3 +2,5 @@ parameters:
     mailer_transport: sendmail
     locale: fr
     secret: ThisTokenIsNotSoSecretChangeIt
+    facebook.client_id: ~
+    facebook.client_secret: ~

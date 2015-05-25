@@ -28,7 +28,7 @@ buildprod () {
 startmysql () {
     if ! docker inspect christmaslist-data-mysql 1>/dev/null 2>&1
     then
-        docker run --name christmaslist-data-mysql adriensamson/mysql true
+        docker run --name christmaslist-data-mysql adriensamson/mysql /srv/setup.sh
     fi
 
     if docker inspect christmaslist-mysql 1>/dev/null 2>&1
@@ -52,10 +52,8 @@ start () {
             docker restart christmaslist-front
         fi
     else
-        docker run -itd -v $PWD:/srv --name christmaslist-front --link christmaslist-mysql:mysql christmaslist-front
+        docker run -itd -p 8880:80 -v $PWD:/srv --name christmaslist-front --link christmaslist-mysql:mysql christmaslist-front
     fi
-
-    docker inspect -f '{{ .NetworkSettings.IPAddress }}' christmaslist-front
 }
 
 startprod () {
@@ -66,8 +64,10 @@ startprod () {
 }
 
 stop () {
-    docker stop christmaslist-front christmaslist-mongo
-    docker rm christmaslist-front christmaslist-mongo
+    docker stop christmaslist-front christmaslist-mysql
+}
+rm () {
+    docker rm -f christmaslist-front christmaslist-mysql
 }
 
 composer () {

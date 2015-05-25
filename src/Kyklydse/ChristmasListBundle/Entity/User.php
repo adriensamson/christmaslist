@@ -8,6 +8,8 @@ class User extends BaseUser
 {
     protected $id;
 
+    protected $facebookId;
+
     /**
      * Get id
      *
@@ -26,5 +28,21 @@ class User extends BaseUser
     public function getName()
     {
         return $this->getUsername();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacebookId()
+    {
+        return $this->facebookId;
+    }
+
+    /**
+     * @param mixed $facebookId
+     */
+    public function setFacebookId($facebookId)
+    {
+        $this->facebookId = $facebookId;
     }
 }

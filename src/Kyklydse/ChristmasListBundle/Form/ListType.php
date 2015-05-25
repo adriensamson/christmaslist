@@ -12,14 +12,14 @@ class ListType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('owners', null, array('label' => 'Owners'))
+            ->add('owners', null, array('label' => 'Owners', 'expanded' => true))
             ->add('name', null, array('label' => 'List name'))
-            ->add('invitedUsers', null, array('label' => 'Invited users'));
+            ->add('invitedUsers', null, array('label' => 'Invited users', 'expanded' => true));
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('data_class' => 'Kyklydse\\ChristmasListBundle\\Document\\ChristmasList'));
+        $resolver->setDefaults(array('data_class' => 'Kyklydse\\ChristmasListBundle\\Entity\\ChristmasList'));
     }
     
     public function getName()

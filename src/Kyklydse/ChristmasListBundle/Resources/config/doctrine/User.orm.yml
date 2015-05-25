@@ -5,3 +5,8 @@ Kyklydse\ChristmasListBundle\Entity\User:
             type: integer
             generator:
                 strategy: AUTO
+    fields:
+        facebookId:
+            type: string
+            nullable: true
+            unique: true

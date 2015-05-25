@@ -25,7 +25,8 @@
         <button type="submit" id="_submit" name="_submit" >{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}</button>
     </div>
     <div>
-        <a href="{{ path('fos_user_registration_register') }}">{{ 'Register' | trans }}</a>
+        <a href="{{ path('facebook_redirect') }}">Facebook</a>
+        | <a href="{{ path('fos_user_registration_register') }}">{{ 'Register' | trans }}</a>
         | <a href="{{ path('fos_user_resetting_request') }}">{{ 'Forgotten password' | trans }}</a>
     </div>
 </form>

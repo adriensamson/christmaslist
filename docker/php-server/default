@@ -6,7 +6,7 @@ server {
 
     server_name localhost;
 
-    rewrite ^/app_dev\.php/$ /app_dev.php permanent;
+    #rewrite ^/app_dev\.php/$ /app_dev.php permanent;
 
     location / {
         try_files $uri /app.php$is_args$args;
