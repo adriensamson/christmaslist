@@ -51,7 +51,7 @@ class FacebookService
             $session, 'GET', '/me/friends'
         ))->execute()->getGraphObject()->getProperty('data')->asArray();
 
-        return array_map(function ($arr) { return $arr['id']; }, $data);
+        return array_map(function ($arr) { return $arr->id; }, $data);
     }
 
     private function getRedirectLoginHelper()

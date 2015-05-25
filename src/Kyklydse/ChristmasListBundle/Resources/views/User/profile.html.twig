@@ -1,0 +1,33 @@
+{% extends 'KyklydseChristmasListBundle::layout.html.twig' %}
+
+{% block content %}
+
+    <h1>{% trans %}My profile{% endtrans %}</h1>
+
+    {{ form_start(userForm) }}
+        {{ form_errors(userForm) }}
+
+        {{ form_rest(userForm) }}
+
+        <button type="submit">{% trans %}Validate{% endtrans %}</button>
+    {{ form_end(userForm) }}
+
+    {% if user.facebookId %}
+        {% trans %}Linked with Facebook{% endtrans %}
+    {% else %}
+        <a class="button" href="{{ path('facebook_redirect') }}">
+            {% trans %}Link with Facebook{% endtrans %}
+        </a>
+    {% endif %}
+
+    <h2>{% trans %}My friends{% endtrans %}</h2>
+
+    <ul>
+    {% for friend in user.friends %}
+        <li>{{ friend.username }}</li>
+    {% endfor %}
+    </ul>
+
+    <hr/>
+    <a class="button" href="{{ path('kyklydse_christmaslist_list_index') }}">{% trans %}Back to lists{% endtrans %}</a>
+{% endblock %}

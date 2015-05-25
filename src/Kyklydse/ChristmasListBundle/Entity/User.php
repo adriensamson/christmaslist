@@ -2,6 +2,8 @@
 
 namespace Kyklydse\ChristmasListBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use FOS\UserBundle\Entity\User as BaseUser;
 
 class User extends BaseUser
@@ -9,6 +11,16 @@ class User extends BaseUser
     protected $id;
 
     protected $facebookId;
+    /**
+     * @var Collection
+     */
+    private $friends;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->friends = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -44,5 +56,15 @@ class User extends BaseUser
     public function setFacebookId($facebookId)
     {
         $this->facebookId = $facebookId;
+    }
+
+    public function getFriends()
+    {
+        return $this->friends->toArray();
+    }
+
+    public function addFriend(User $user)
+    {
+        $this->friends->add($user);
     }
 }

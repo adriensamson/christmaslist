@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class ListController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("")
      * @Template()
      */
     public function indexAction()

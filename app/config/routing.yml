@@ -5,10 +5,6 @@ KyklydseChristmasListBundle:
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 
-fos_user_profile:
-    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
-    prefix: /profile
-
 fos_user_register:
     resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
     prefix: /register
@@ -30,3 +26,8 @@ facebook_callback:
     pattern: /login/check-facebook
     defaults:
         _controller: KyklydseChristmasListBundle:Facebook:callback
+
+user_profile:
+    pattern: /profile
+    defaults:
+        _controller: KyklydseChristmasListBundle:User:profile

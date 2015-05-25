@@ -25,8 +25,18 @@ class FacebookController extends Controller
         $me = $facebook->getMe($session);
         /** @var GraphUser $me */
 
+        $user = $this->getUser();
+        if ($user) {
+            if ($user->getFacebookId() && $user->getFacebookId() !== $me->getId()) {
+                return $this->redirectToRoute('kyklydse_christmaslist_list_index');
+            }
+            $user->setFacebookId($me->getId());
+        }
+
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('KyklydseChristmasListBundle:User')->findOneBy(['facebookId' => $me->getId()]);
+        if (!$user) {
+            $user = $em->getRepository('KyklydseChristmasListBundle:User')->findOneBy(['facebookId' => $me->getId()]);
+        }
 
         if (!$user) {
             $user = new User();
@@ -37,19 +47,26 @@ class FacebookController extends Controller
             $user->setEnabled(true);
 
             $em->persist($user);
-            $em->flush();
         }
 
-        $this->updateFriends($session);
-
+        $this->updateFriends($user, $session);
+        $em->flush();
         $this->get('security.context')->setToken(new UsernamePasswordToken($user, null, 'main'));
 
         return $this->redirectToRoute('kyklydse_christmaslist_list_index');
     }
 
-    private function updateFriends(FacebookSession $session)
+    private function updateFriends(User $user, FacebookSession $session)
     {
         $facebook = $this->get('kyklydse_christmas_list.facebook');
         $friendIds = $facebook->getFriendIds($session);
+
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('KyklydseChristmasListBundle:User');
+        $friends = $repo->findByFacebookIds($friendIds);
+
+        foreach ($friends as $friend) {
+            $repo->makeFriends($user, $friend);
+        }
     }
 }

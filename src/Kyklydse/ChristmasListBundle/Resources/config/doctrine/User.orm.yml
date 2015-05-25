@@ -1,5 +1,6 @@
 Kyklydse\ChristmasListBundle\Entity\User:
     type: entity
+    repositoryClass: Kyklydse\ChristmasListBundle\Repository\UserRepository
     id:
         id:
             type: integer
@@ -10,3 +11,11 @@ Kyklydse\ChristmasListBundle\Entity\User:
             type: string
             nullable: true
             unique: true
+    manyToMany:
+        friends:
+            targetEntity: User
+            joinTable:
+                name: user_friends
+                inverseJoinColumns:
+                    friend_id:
+                        referenceColumnName: id
