@@ -1,0 +1,17 @@
+{% extends 'KyklydseChristmasListBundle::layout.html.twig' %}
+
+{% block content %}
+
+    <h1>{% trans %}My friends' friends{% endtrans %}</h1>
+
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+        {{ form_rest(form) }}
+
+        <button type="submit">{% trans %}Invite{% endtrans %}</button>
+    {{ form_end(form) }}
+
+    <hr/>
+    <a class="button" href="{{ path('user_profile') }}">{% trans %}Back to my profile{% endtrans %}</a>
+{% endblock %}

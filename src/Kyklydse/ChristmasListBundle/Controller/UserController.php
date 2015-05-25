@@ -24,4 +24,24 @@ class UserController extends Controller
             'userForm' => $userForm->createView(),
         ]);
     }
+
+    public function inviteFriendsFriendsAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $friendsFriends = $em->getRepository('KyklydseChristmasListBundle:User')->findFriendsFriends($this->getUser());
+
+        $form = $this->createFormBuilder($this->getUser())
+            ->add('invitedFriends', null, ['expanded' => true, 'by_reference' => false, 'choices' => $friendsFriends, 'label' => ' '])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('user_profile');
+        }
+
+        return $this->render('KyklydseChristmasListBundle:User:inviteFriendsFriends.html.twig', ['form' => $form->createView()]);
+    }
 }

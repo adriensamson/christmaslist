@@ -16,10 +16,16 @@ class User extends BaseUser
      */
     private $friends;
 
+    /**
+     * @var Collection
+     */
+    private $invitedFriends;
+
     public function __construct()
     {
         parent::__construct();
         $this->friends = new ArrayCollection();
+        $this->invitedFriends = new ArrayCollection();
     }
 
     /**
@@ -66,5 +72,23 @@ class User extends BaseUser
     public function addFriend(User $user)
     {
         $this->friends->add($user);
+        if ($this->invitedFriends->contains($user)) {
+            $this->removeInvitedFriend($user);
+        }
+    }
+
+    public function getInvitedFriends()
+    {
+        return $this->invitedFriends->toArray();
+    }
+
+    public function addInvitedFriend(User $user)
+    {
+        $this->invitedFriends->add($user);
+    }
+
+    public function removeInvitedFriend(User $user)
+    {
+        $this->invitedFriends->removeElement($user);
     }
 }

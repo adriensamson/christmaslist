@@ -31,3 +31,8 @@ user_profile:
     pattern: /profile
     defaults:
         _controller: KyklydseChristmasListBundle:User:profile
+
+user_friends_friends:
+    pattern: /profile/friendsfriends
+    defaults:
+        _controller: KyklydseChristmasListBundle:User:inviteFriendsFriends

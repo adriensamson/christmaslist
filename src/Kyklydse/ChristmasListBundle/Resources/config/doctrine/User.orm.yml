@@ -19,3 +19,10 @@ Kyklydse\ChristmasListBundle\Entity\User:
                 inverseJoinColumns:
                     friend_id:
                         referenceColumnName: id
+        invitedFriends:
+            targetEntity: User
+            joinTable:
+                name: user_invitedfriends
+                inverseJoinColumns:
+                    friend_id:
+                        referenceColumnName: id

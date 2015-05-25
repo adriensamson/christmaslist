@@ -28,6 +28,8 @@
     {% endfor %}
     </ul>
 
+    <a class="button" href="{{ path('user_friends_friends') }}">{% trans %}See my friends' friends{% endtrans %}</a>
+
     <hr/>
     <a class="button" href="{{ path('kyklydse_christmaslist_list_index') }}">{% trans %}Back to lists{% endtrans %}</a>
 {% endblock %}
