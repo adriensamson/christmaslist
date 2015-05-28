@@ -9,6 +9,7 @@ build () {
 
 buildprod () {
     build
+    startmysql
 
     docker rm christmaslist-code-front
     docker run --name christmaslist-code-front christmaslist-front true
@@ -17,12 +18,22 @@ buildprod () {
     docker run --rm --volumes-from christmaslist-code-front christmaslist-front rm -rf /srv/app/cache /srv/app/logs
     docker run --rm --volumes-from christmaslist-code-front christmaslist-front mkdir -p /srv/app/cache /srv/app/logs
 
-    docker run -it --rm --volumes-from christmaslist-code-front christmaslist-cli /usr/local/bin/composer install
-    docker run -it --rm --volumes-from christmaslist-code-front christmaslist-cli app/console cache:clear --env=prod
+    docker run -it --rm --volumes-from christmaslist-code-front --link christmaslist-mysql:mysql christmaslist-cli /usr/local/bin/composer install
+    docker run -it --rm --volumes-from christmaslist-code-front --link christmaslist-mysql:mysql christmaslist-cli app/console cache:clear --env=prod
 
     docker run --rm --volumes-from christmaslist-code-front christmaslist-front chgrp -R www-data /srv/app/cache /srv/app/logs
     docker run --rm --volumes-from christmaslist-code-front christmaslist-front chmod -R g+w /srv/app/cache /srv/app/logs
     docker run --rm --volumes-from christmaslist-code-front christmaslist-front rm /srv/web/app_dev.php
+}
+
+exportprod () {
+    docker run --rm --volumes-from christmaslist-code-front -v $PWD:/backup christmaslist-front tar -czPf /backup/christmaslist-code-front.tar.gz /srv
+}
+
+importprod () {
+    docker rm christmaslist-code-front
+    docker run --name christmaslist-code-front christmaslist-front true
+    docker run --rm --volumes-from christmaslist-code-front -v $PWD:/backup christmaslist-front tar -xzPf /backup/christmaslist-code-front.tar.gz
 }
 
 startmysql () {
