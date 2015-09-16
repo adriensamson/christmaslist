@@ -1,2 +1,4 @@
 Register: S'inscrire
 Forgotten password: Mot de passe oublié
+security.login.facebook_connect: Connexion Facebook
+security.login.password_connect: Connexion par mot de passe

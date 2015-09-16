@@ -28,7 +28,7 @@
     {% endfor %}
     </ul>
     {% if user.facebookId %}
-        <a class="button" href="{{ path('facebook_redirect', {return: 'profile'}) }}">{% trans %}Update Facebook friends{% endtrans %}</a>
+        <a class="button" href="{{ path('facebook_redirect', {return: 'profile'}) }}">{% trans %}Find Facebook friends{% endtrans %}</a>
         <a class="button" href="{{ path('facebook_invite') }}">{% trans %}Invite Facebook friends{% endtrans %}</a>
         <br/>
     {% endif %}
