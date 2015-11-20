@@ -22,11 +22,6 @@ class ChristmasList
     protected $owners;
 
     /**
-     * @var User[]
-     */
-    protected $invitedUsers;
-
-    /**
      * @var Item[]
      */
     protected $items;
@@ -35,7 +30,6 @@ class ChristmasList
     {
         $this->items = new ArrayCollection();
         $this->owners = new ArrayCollection();
-        $this->invitedUsers = new ArrayCollection();
     }
     
     /**
@@ -71,24 +65,6 @@ class ChristmasList
     public function isOwner(User $user)
     {
         return $this->owners->contains($user);
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getInvitedUsers()
-    {
-        return $this->invitedUsers;
-    }
-
-    /**
-     * @param User $user
-     *
-     * @return bool
-     */
-    public function isInvited(User $user)
-    {
-        return $this->invitedUsers->contains($user);
     }
 
     /**

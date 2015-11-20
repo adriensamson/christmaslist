@@ -13,10 +13,6 @@ Kyklydse\ChristmasListBundle\Entity\ChristmasList:
             targetEntity: Kyklydse\ChristmasListBundle\Entity\User
             joinTable:
                 name: christmaslist_owner
-        invitedUsers:
-            targetEntity: Kyklydse\ChristmasListBundle\Entity\User
-            joinTable:
-                name: christmaslist_invited_user
         items:
             targetEntity: Kyklydse\ChristmasListBundle\Entity\Item
             cascade: [all]

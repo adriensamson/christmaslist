@@ -31,7 +31,7 @@ class ListController extends Controller
         /** @var EntityManager $em */
         $qb = $em->getRepository('KyklydseChristmasListBundle:ChristmasList')->createQueryBuilder('l');
         $qb->leftJoin('l.owners', 'o');
-        $qb->leftJoin('l.invitedUsers', 'i');
+        $qb->leftJoin('o.friends', 'i');
         $qb->where('o = :user OR i = :user');
         $qb->setParameter(':user', $currentUser);
         $lists = $qb->getQuery()->getResult();

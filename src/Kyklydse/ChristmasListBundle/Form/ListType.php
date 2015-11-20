@@ -23,12 +23,7 @@ class ListType extends AbstractType
                 'expanded' => true,
                 'choices' => $users,
             ))
-            ->add('name', null, array('label' => 'List name'))
-            ->add('invitedUsers', null, array(
-                'label' => 'Invited users',
-                'expanded' => true,
-                'choices' => $users,
-            ));
+            ->add('name', null, array('label' => 'List name'));
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver)
