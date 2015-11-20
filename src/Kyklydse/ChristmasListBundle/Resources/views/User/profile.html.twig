@@ -33,7 +33,15 @@
         <br/>
     {% endif %}
 
-    <a class="button" href="{{ path('user_friends_friends') }}">{% trans %}See my friends' friends{% endtrans %}</a>
+    {% if friendsFriendsForm.invitedFriends.vars.choices is not empty %}
+        {{ form_start(friendsFriendsForm) }}
+        {{ form_errors(friendsFriendsForm) }}
+
+        {{ form_rest(friendsFriendsForm) }}
+
+        <button type="submit">{% trans %}Invite{% endtrans %}</button>
+        {{ form_end(friendsFriendsForm) }}
+    {% endif %}
 
     <hr/>
     <a class="button" href="{{ path('kyklydse_christmaslist_list_index') }}">{% trans %}Back to lists{% endtrans %}</a>

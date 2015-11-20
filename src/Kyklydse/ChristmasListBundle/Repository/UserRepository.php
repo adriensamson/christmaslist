@@ -22,27 +22,27 @@ class UserRepository extends EntityRepository
         $user2->addFriend($user1);
     }
 
+    public function inviteFriend(User $user1, User $user2)
+    {
+        if ($user2->getInvitedFriends()->contains($user1)) {
+            $this->makeFriends($user1, $user2);
+            return;
+        }
+        $user1->addInvitedFriend($user2);
+    }
+
     public function findFriendsFriends(User $user)
     {
-        $friends = $this->createQueryBuilder('u')
-            ->select('f.id')
-            ->innerJoin('u.friends', 'f')
-            ->where('u = :user')
-            ->setParameter(':user', $user)
-            ->getQuery()->getResult();
-
-        if (empty($friends)) {
-            return [];
-        }
-
         $friendsFriends = $this->createQueryBuilder('f')
             ->select('ff.id')
             ->innerJoin('f.friends', 'ff')
             ->andWhere('f.id IN (:friends)')
             ->andWhere('ff.id <> :user')
             ->andWhere('ff.id NOT IN (:friends)')
+            ->andWhere('ff.id NOT IN (:invitedFriends)')
             ->setParameter(':user', $user->getId())
-            ->setParameter('friends', $friends)
+            ->setParameter(':friends', $user->getFriends())
+            ->setParameter(':invitedFriends', $user->getInvitedFriends())
             ->getQuery()->getResult();
 
         if (empty($friendsFriends)) {
