@@ -24,7 +24,7 @@ class UserRepository extends EntityRepository
 
     public function inviteFriend(User $user1, User $user2)
     {
-        if ($user2->getInvitedFriends()->contains($user1)) {
+        if (in_array($user1, $user2->getInvitedFriends(), true)) {
             $this->makeFriends($user1, $user2);
             return;
         }
@@ -33,18 +33,24 @@ class UserRepository extends EntityRepository
 
     public function findFriendsFriends(User $user)
     {
-        $friendsFriends = $this->createQueryBuilder('f')
+        if (!count($user->getFriends())) {
+            return [];
+        }
+
+        $qb = $this->createQueryBuilder('f')
             ->select('ff.id')
             ->innerJoin('f.friends', 'ff')
             ->andWhere('f.id IN (:friends)')
             ->andWhere('ff.id <> :user')
             ->andWhere('ff.id NOT IN (:friends)')
-            ->andWhere('ff.id NOT IN (:invitedFriends)')
             ->setParameter(':user', $user->getId())
-            ->setParameter(':friends', $user->getFriends())
-            ->setParameter(':invitedFriends', $user->getInvitedFriends())
-            ->getQuery()->getResult();
+            ->setParameter(':friends', $user->getFriends());
 
+        if (count($user->getInvitedFriends())) {
+            $qb->andWhere('ff.id NOT IN (:invitedFriends)')->setParameter(':invitedFriends', $user->getInvitedFriends());
+        }
+
+        $friendsFriends = $qb->getQuery()->getResult();
         if (empty($friendsFriends)) {
             return [];
         }

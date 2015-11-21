@@ -38,6 +38,7 @@ class UserController extends Controller
             ])
             ->add('invitedFriends', 'entity', [
                 'class' => 'KyklydseChristmasListBundle:User',
+                'multiple' => true,
                 'expanded' => true,
                 'by_reference' => false,
                 'choices' => $friendsFriends,
