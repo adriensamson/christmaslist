@@ -40,7 +40,7 @@ class ListController extends Controller
     
     /**
      * @Route("/list/id/{id}")
-     * @Security("list.isOwner(user) || list.isInvited(user)")
+     * @Security("list.canAccess(user)")
      * @Template()
      */
     public function viewAction(ChristmasList $list)
@@ -51,7 +51,7 @@ class ListController extends Controller
 
     /**
      * @Route("/list/id/{id}/edit")
-     * @Security("list.isOwner(user) || list.isInvited(user)")
+     * @Security("list.canAccess(user)")
      * @Template()
      */
     public function editAction(ChristmasList $list, Request $request)
@@ -94,7 +94,7 @@ class ListController extends Controller
     
     /**
      * @Route("/list/item/new/{id}")
-     * @Security("list.isOwner(user) || list.isInvited(user)")
+     * @Security("list.canAccess(user)")
      * @Template()
      */
     public function newItemAction(ChristmasList $list, Request $request)
@@ -117,7 +117,7 @@ class ListController extends Controller
     
     /**
      * @Route("/list/item/edit/{id}/{item_id}")
-     * @Security("list.isOwner(user) || list.isInvited(user)")
+     * @Security("list.canAccess(user)")
      * @Template()
      */
     public function editItemAction(ChristmasList $list, $item_id, Request $request)
@@ -152,7 +152,7 @@ class ListController extends Controller
     
     /**
      * @Route("/list/item/comment/{id}/{item_id}")
-     * @Security("list.isOwner(user) || list.isInvited(user)")
+     * @Security("list.canAccess(user)")
      * @Template()
      */
     public function commentItemAction(ChristmasList $list, $item_id, Request $request)
@@ -186,7 +186,7 @@ class ListController extends Controller
     /**
      * @Route("/list/item/delete/{id}/{item_id}")
      * @Method("POST")
-     * @Security("list.isOwner(user) || list.isInvited(user)")
+     * @Security("list.canAccess(user)")
      */
     public function deleteItemAction(ChristmasList $list, $item_id)
     {

@@ -67,6 +67,20 @@ class ChristmasList
         return $this->owners->contains($user);
     }
 
+    public function canAccess(User $user)
+    {
+        if ($this->owners->contains($user)) {
+            return true;
+        }
+        foreach ($this->owners as $owner) {
+            if (in_array($user, $owner->getFriends(), true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Add item
      *
