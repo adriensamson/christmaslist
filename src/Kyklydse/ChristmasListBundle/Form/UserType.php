@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class UserType extends AbstractType
 {
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'user';
     }

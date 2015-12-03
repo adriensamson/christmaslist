@@ -2,8 +2,7 @@
 
 namespace Kyklydse\ChristmasListBundle\Form;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -26,12 +25,12 @@ class ListType extends AbstractType
             ->add('name', null, array('label' => 'List name'));
     }
     
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array('data_class' => 'Kyklydse\\ChristmasListBundle\\Entity\\ChristmasList'));
     }
     
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'list';
     }

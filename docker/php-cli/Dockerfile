@@ -1,4 +1,4 @@
-FROM stackbrew/debian:wheezy
+FROM stackbrew/debian:jessie
 
 ENV DEBIAN_FRONTEND noninteractive
 

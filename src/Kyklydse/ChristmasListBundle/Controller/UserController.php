@@ -2,7 +2,6 @@
 
 namespace Kyklydse\ChristmasListBundle\Controller;
 
-use Kyklydse\ChristmasListBundle\Entity\User;
 use Kyklydse\ChristmasListBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

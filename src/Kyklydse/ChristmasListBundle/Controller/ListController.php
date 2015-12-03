@@ -25,7 +25,7 @@ class ListController extends Controller
      */
     public function indexAction()
     {
-        $currentUser = $this->get('security.context')->getToken()->getUser();
+        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         /** @var EntityManager $em */
@@ -45,7 +45,7 @@ class ListController extends Controller
      */
     public function viewAction(ChristmasList $list)
     {
-        $currentUser = $this->get('security.context')->getToken()->getUser();
+        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
         return array('list' => $list, 'current_user' => $currentUser);
     }
 
@@ -56,7 +56,7 @@ class ListController extends Controller
      */
     public function editAction(ChristmasList $list, Request $request)
     {
-        $form = $this->createForm(new ListType(), $list);
+        $form = $this->createForm(ListType::class, $list);
         $form->handleRequest($request);
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -64,7 +64,7 @@ class ListController extends Controller
 
             return $this->redirect($this->generateUrl('kyklydse_christmaslist_list_index'));
         }
-        $currentUser = $this->get('security.context')->getToken()->getUser();
+        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
 
         return array('form' => $form->createView(), 'list' => $list, 'current_user' => $currentUser);
     }
@@ -76,7 +76,7 @@ class ListController extends Controller
     public function createAction(Request $request)
     {
         $list = new ChristmasList();
-        $list->addOwner($this->get('security.context')->getToken()->getUser());
+        $list->addOwner($this->get('security.token_storage')->getToken()->getUser());
         $list->setName($this->get('translator')->trans('Christmas %year%', array('%year%' => date('Y'))));
         $form = $this->createForm(new ListType(), $list);
 
@@ -100,8 +100,8 @@ class ListController extends Controller
     public function newItemAction(ChristmasList $list, Request $request)
     {
         $item = new Item();
-        $item->setProposer($this->get('security.context')->getToken()->getUser());
-        $form = $this->createForm(new ItemType(), $item);
+        $item->setProposer($this->get('security.token_storage')->getToken()->getUser());
+        $form = $this->createForm(ItemType::class, $item);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
@@ -130,11 +130,11 @@ class ListController extends Controller
         if (!$item) {
             throw $this->createNotFoundException('No item found for id '.$item_id);
         }
-        if ($item->getProposer() != $this->get('security.context')->getToken()->getUser()) {
+        if ($item->getProposer() != $this->get('security.token_storage')->getToken()->getUser()) {
             throw new AccessDeniedException();
         }
     
-        $form = $this->createForm(new ItemType(), $item);
+        $form = $this->createForm(ItemType::class, $item);
     
         if ($request->getMethod() === 'POST') {
             $form->bind($request);
@@ -165,8 +165,8 @@ class ListController extends Controller
         }
         
         $comment = new Comment();
-        $comment->setAuthor($this->get('security.context')->getToken()->getUser());
-        $form = $this->createForm(new CommentType(), $comment);
+        $comment->setAuthor($this->get('security.token_storage')->getToken()->getUser());
+        $form = $this->createForm(CommentType::class, $comment);
         
         if ($request->getMethod() === 'POST') {
             $form->bind($request);

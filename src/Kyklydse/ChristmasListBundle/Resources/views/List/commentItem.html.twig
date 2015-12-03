@@ -1,12 +1,12 @@
 {% extends 'KyklydseChristmasListBundle::layout.html.twig' %}
 
 {% block content %}
-<form action="{{ path('kyklydse_christmaslist_list_commentitem', {'id': list.id, 'item_id': item.id}) }}" method="post" {{ form_enctype(form) }}>
+{{ form_start(form) }}
     {{ form_errors(form) }}
 
     {{ form_rest(form) }}
 
     <button type="submit">{% trans %}Validate{% endtrans %}</button>
-</form>
+{{ form_end(form) }}
 <a class="button" href="{{ path('kyklydse_christmaslist_list_view', {'id': list.id}) }}">{{ 'Back to list' | trans }}</a>
 {% endblock %}
