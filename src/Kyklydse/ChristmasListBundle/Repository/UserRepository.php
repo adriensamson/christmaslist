@@ -61,4 +61,15 @@ class UserRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function getWaitingInvitations(User $user)
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        $qb->join('u.invitedFriends', 'i');
+        $qb->andWhere(':user = i');
+        $qb->setParameter(':user', $user);
+
+        return $qb->getQuery()->getResult();
+    }
 }

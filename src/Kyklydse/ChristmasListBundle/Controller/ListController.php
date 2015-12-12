@@ -35,7 +35,11 @@ class ListController extends Controller
         $qb->where('o = :user OR i = :user');
         $qb->setParameter(':user', $currentUser);
         $lists = $qb->getQuery()->getResult();
-        return array('lists' => $lists, 'current_user' => $currentUser);
+        return array(
+            'lists' => $lists,
+            'current_user' => $currentUser,
+            'waitingInvitations' => $em->getRepository('KyklydseChristmasListBundle:User')->getWaitingInvitations($currentUser),
+        );
     }
     
     /**

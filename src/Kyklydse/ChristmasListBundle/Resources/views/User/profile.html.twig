@@ -27,6 +27,14 @@
         <li>{{ friend.username }}</li>
     {% endfor %}
     </ul>
+    {% if user.invitedFriends | length %}
+        <h2>Amis invités</h2>
+        <ul>
+            {% for friend in user.invitedFriends %}
+                <li>{{ friend.username }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
     {% if user.facebookId %}
         <a class="button" href="{{ path('facebook_redirect', {return: 'profile'}) }}">{% trans %}Find Facebook friends{% endtrans %}</a>
         <a class="button" href="{{ path('facebook_invite') }}">{% trans %}Invite Facebook friends{% endtrans %}</a>

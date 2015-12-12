@@ -4,6 +4,15 @@
 
 {% block content %}
 
+{% if waitingInvitations | length %}
+    <div class="alert-box alert" style="margin-top: 1em;">
+        Attention, vous avez des <a href="{{ path('user_profile') }}" style="color: white; text-decoration: underline">invitations à valider</a> de :
+        {% for invitation in waitingInvitations %}
+            {{ invitation }}{% if not loop.last %},{% endif %}
+        {% endfor %}.
+    </div>
+{% endif %}
+
 <h1>{% trans %}All lists{% endtrans %}</h1>
 
 {% for list in lists %}

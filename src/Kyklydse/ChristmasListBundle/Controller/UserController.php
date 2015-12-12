@@ -30,8 +30,9 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $friendsFriends = $em->getRepository('KyklydseChristmasListBundle:User')->findFriendsFriends($this->getUser());
+        $waitingInvitations  = $em->getRepository('KyklydseChristmasListBundle:User')->getWaitingInvitations($this->getUser());
 
-        return $this->createFormBuilder(null, [
+        return $this->createFormBuilder(['invitedFriends' => $waitingInvitations], [
                 'action' => $this->generateUrl('user_friends_friends'),
                 'method' => 'POST',
             ])
