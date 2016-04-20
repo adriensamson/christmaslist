@@ -28,9 +28,10 @@ swiftmailer:
 doctrine:
     dbal:
         driver: pdo_mysql
-        host: mysql
-        user: root
-        dbname: christmaslist
+        host: "%db.host%"
+        user: "%db.user%"
+        password: "%db.password%"
+        dbname: "%db.name%"
     orm:
         mappings:
             FOSUserBundle: ~
