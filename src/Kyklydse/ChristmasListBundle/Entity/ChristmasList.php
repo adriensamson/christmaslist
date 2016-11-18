@@ -26,6 +26,9 @@ class ChristmasList
      */
     protected $items;
 
+    /** @var  \DateTime */
+    protected $date;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -119,5 +122,21 @@ class ChristmasList
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param \DateTime $date
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
     }
 }

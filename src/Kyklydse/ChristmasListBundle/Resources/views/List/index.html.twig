@@ -25,5 +25,29 @@
 {% endfor %}
 <a class="button" href="{{ path('kyklydse_christmaslist_list_create') }}">{% trans %}New list{% endtrans %}</a>
 
+{% if archivedLists | length %}
+<h2>Listes archivées <small id="archive-toggle" style="cursor: pointer">Afficher</small></h2>
+<div id="archive" style="display:none;">
+    {% for list in archivedLists %}
+        <h2>
+            <a href="{{ path('kyklydse_christmaslist_list_view' , {'id':list.id}) }}">
+                {% for owner in list.owners %}{{ owner.name }}{% if not loop.last %}, {% endif %}{% endfor %}
+                <small>{{ list.name }}</small>
+            </a>
+        </h2>
+    {% endfor %}
+</div>
+<script>
+(function () {
+    var toggle = document.getElementById('archive-toggle');
+    var archive = document.getElementById('archive');
+    toggle.addEventListener('click', function () {
+        var wasHidden = archive.style.display === 'none';
+        archive.style.display = wasHidden ? 'block' : 'none';
+        toggle.textContent = wasHidden ? 'Cacher' : 'Afficher';
+    });
+})()
+</script>
+{% endif %}
 
 {% endblock %}

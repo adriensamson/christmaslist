@@ -34,9 +34,24 @@ class ListController extends Controller
         $qb->leftJoin('o.friends', 'i');
         $qb->where('o = :user OR i = :user');
         $qb->setParameter(':user', $currentUser);
+        $qb->addOrderBy('l.date', 'DESC');
+        $qb->addOrderBy('l.id', 'DESC');
         $lists = $qb->getQuery()->getResult();
+
+        $now = new \DateTime();
+        $currentLists = [];
+        $archivedLists = [];
+        foreach ($lists as $list) {
+            if ($list->getDate() < $now) {
+                $archivedLists[] = $list;
+            } else {
+                $currentLists[] = $list;
+            }
+        }
+
         return array(
-            'lists' => $lists,
+            'lists' => $currentLists,
+            'archivedLists' => $archivedLists,
             'current_user' => $currentUser,
             'waitingInvitations' => $em->getRepository('KyklydseChristmasListBundle:User')->getWaitingInvitations($currentUser),
         );
@@ -82,6 +97,7 @@ class ListController extends Controller
         $list = new ChristmasList();
         $list->addOwner($this->get('security.token_storage')->getToken()->getUser());
         $list->setName($this->get('translator')->trans('Christmas %year%', array('%year%' => date('Y'))));
+        $list->setDate(new \DateTime('25 december'));
         $form = $this->createForm(new ListType(), $list);
 
         $form->handleRequest($request);

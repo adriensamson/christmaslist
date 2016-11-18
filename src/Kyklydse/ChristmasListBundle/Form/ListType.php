@@ -22,7 +22,9 @@ class ListType extends AbstractType
                 'expanded' => true,
                 'choices' => $users,
             ))
-            ->add('name', null, array('label' => 'List name'));
+            ->add('name', null, array('label' => 'List name'))
+            ->add('date', 'date', array('widget' => 'single_text'))
+        ;
     }
     
     public function configureOptions(OptionsResolver $resolver)

@@ -8,6 +8,8 @@ Kyklydse\ChristmasListBundle\Entity\ChristmasList:
     fields:
         name:
             type: string
+        date:
+            type: date
     manyToMany:
         owners:
             targetEntity: Kyklydse\ChristmasListBundle\Entity\User
